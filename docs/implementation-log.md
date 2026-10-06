@@ -214,3 +214,18 @@
   400 with `["Page: Page must be 1 or greater.", "PageSize: PageSize must be between
   1 and 100."]`; 404 bookmarking nonexistent question. All in-envelope, camelCase.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 12 — Serilog ✅ (2026-10-07)
+
+- NuGet (Api): `Serilog.AspNetCore`, `Serilog.Sinks.File` (console sink ships with AspNetCore).
+- `appsettings.json` + `.Development.json`: `Serilog` section — console + rolling daily
+  file (`logs/log-.txt`, 7 retained, compact timestamped template); Production-quiet
+  overrides, Development shows EF SQL commands.
+- `Program.cs`: `Log.Logger` from configuration, `UseSerilog()` on the host,
+  `UseSerilogRequestLogging()` (method/path/status/elapsed only — never bodies, tokens,
+  passwords or connection strings, §27), startup line plus fatal-catch with
+  `CloseAndFlush()` so no event is lost on crash.
+- Live verification: startup/hosting lines, per-request `HTTP GET /api/categories
+  responded 200`, EF command text in Development, handled-error warning for the 404.
+- `.gitignore`: `logs/` — diagnostics stay local.
+- Verified: full-solution `dotnet build` — 0 errors.

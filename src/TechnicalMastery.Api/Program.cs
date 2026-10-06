@@ -1,9 +1,19 @@
 using System.Text.Json.Serialization;
+using Serilog;
 using TechnicalMastery.Api.Middleware;
 using TechnicalMastery.Application;
 using TechnicalMastery.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Serilog reads its sinks/levels from the "Serilog" appsettings section.
+// Only method/path/status/elapsed are ever logged — never bodies, tokens,
+// passwords or connection strings (§27).
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 
@@ -30,8 +40,23 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// Concise per-request line: method, path, status code, elapsed milliseconds.
+app.UseSerilogRequestLogging();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+try
+{
+    Log.Information("TechnicalMastery API started in {Environment}.", app.Environment.EnvironmentName);
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "TechnicalMastery API terminated unexpectedly.");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
