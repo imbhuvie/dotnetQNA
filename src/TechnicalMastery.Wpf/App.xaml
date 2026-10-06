@@ -5,5 +5,8 @@
     <Application.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter" />
+        <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
     </Application.Resources>
 </Application>

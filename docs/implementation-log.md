@@ -386,3 +386,14 @@
 - Browse gains Sort options (Default/Newest/Oldest/Hardest/Easiest) mapped to the
   API's `sortBy`/`descending` — full Search/Filter/Sort/Pagination coverage (§12).
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 23 — Bookmarks ✅ (2026-10-07)
+
+- `BookmarksViewModel`: loads all bookmarks via `IBookmarkApiClient`; `OpenBookmarkCommand`
+  navigates to detail; `RemoveBookmarkCommand` calls API then removes locally.
+- `BookmarksView`: list of bookmarked questions (title, date), each row has
+  "Remove" button; empty state when no bookmarks.
+- Added converters: `CountToVisibility` (non-zero → Visible), `ZeroToVisibility` (zero → Visible),
+  `DateTimeToString` (formats DateTime as "yyyy-MM-dd HH:mm"); registered app-wide.
+- Fixed StringFormat-in-Run XAML issue by using a converter.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings; app launches.
