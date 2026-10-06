@@ -3,6 +3,8 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TechnicalMastery.Wpf.Services;
+using TechnicalMastery.Wpf.ViewModels;
 
 namespace TechnicalMastery.Wpf;
 
@@ -26,7 +28,16 @@ public partial class App : Application
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
         // View/view-model registrations arrive in Phase 17+.
+        builder.Services.AddSingleton<NavigationService>();
+        builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<MainWindow>();
+        builder.Services.AddTransient<DashboardViewModel>();
+        builder.Services.AddTransient<BrowseViewModel>();
+        builder.Services.AddTransient<BookmarksViewModel>();
+        builder.Services.AddTransient<ProgressViewModel>();
+        builder.Services.AddTransient<NotesViewModel>();
+        builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<AboutViewModel>();
 
         this.host = builder.Build();
         this.host.Start();

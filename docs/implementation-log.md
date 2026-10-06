@@ -306,3 +306,18 @@
 - `appsettings.json` (`Api:BaseUrl`, copied to output): the API address lives in exactly
   one place, never hardcoded (§31).
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 17 — MVVM Infrastructure ✅ (2026-10-07)
+
+- `ViewModels/ViewModelBase.cs`: Toolkit `ObservableObject` + `IsBusy`/`ErrorMessage`
+  + virtual `InitializeAsync` (API loading hook — never in constructors).
+- `Services/NavigationService.cs`: view-model-first navigation (`NavigateToAsync<T>`,
+  DI-resolved, auto-initialized). No view types referenced — screens resolve via
+  `DataTemplate`s, code-behind stays logic-free.
+- `ViewModels/MainViewModel.cs`: 7 navigation `RelayCommand`s, global `SearchText` +
+  `SearchCommand` (routes into Browse), exposes `Navigation` for the content host.
+- `MainWindow.xaml`: sidebar + header-search + `ContentControl`; `MainWindow.xaml.cs`
+  only assigns the injected VM and shows the dashboard — the project's sole code-behind logic.
+- 7 stub views/VMs (Dashboard/Browse/Bookmarks/Progress/Notes/Settings/About) with
+  placeholders; real content lands in Phases 19–26. All VMs registered in the host.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

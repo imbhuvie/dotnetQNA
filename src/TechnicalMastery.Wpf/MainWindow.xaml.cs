@@ -1,23 +1,26 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using TechnicalMastery.Wpf.ViewModels;
 
 namespace TechnicalMastery.Wpf;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Shell window. The only code-behind in the project: assigns the injected
+/// view model and navigates to the dashboard. No API calls, no logic.
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly MainViewModel viewModel;
+
+    public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
+        this.viewModel = viewModel;
+        DataContext = viewModel;
+        Loaded += OnLoaded;
+    }
+
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        await this.viewModel.ShowDashboardAsync();
     }
 }
