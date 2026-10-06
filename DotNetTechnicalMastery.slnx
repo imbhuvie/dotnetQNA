@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TechnicalMastery.Api/TechnicalMastery.Api.csproj" />
+    <Project Path="src/TechnicalMastery.Application/TechnicalMastery.Application.csproj" />
+    <Project Path="src/TechnicalMastery.Domain/TechnicalMastery.Domain.csproj" />
+    <Project Path="src/TechnicalMastery.Infrastructure/TechnicalMastery.Infrastructure.csproj" />
+    <Project Path="src/TechnicalMastery.Wpf/TechnicalMastery.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TechnicalMastery.Tests/TechnicalMastery.Tests.csproj" />
+  </Folder>
+</Solution>
