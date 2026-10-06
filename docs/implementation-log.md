@@ -350,3 +350,18 @@
 - Live check: API reseeded (30 questions), WPF exe launched and stayed alive through
   startup/navigation/dashboard load with no crash; API serving alongside.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 20 — Question List ✅ (2026-10-07)
+
+- `BrowseViewModel`: category list → topic combo (reloaded per category) → difficulty
+  combo (All + 6 levels) → server-side paged list (20/page, Prev/Next + counts) →
+  `OpenQuestionCommand` navigates to detail with the id. Search text executes as an
+  API-side query (full search UX refined in Phase 22). Explicit Apply buttons instead
+  of selection-changed events — every load path is a command.
+- `BrowseView`: filter rail + question cards (text, category/topic, difficulty, status)
+  + pager; responsive grid layout.
+- `NavigationService.NavigateToAsync<T>(configure)`: configure-before-initialize so
+  detail screens receive their id before loading.
+- `QuestionDetailViewModel`/view stub + template + DI registration (reader in Phase 21).
+- Live check: app launches and stays alive with API serving.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

@@ -51,6 +51,7 @@ public partial class App : Application
         builder.Services.AddSingleton<MainWindow>();
         builder.Services.AddTransient<DashboardViewModel>();
         builder.Services.AddTransient<BrowseViewModel>();
+        builder.Services.AddTransient<QuestionDetailViewModel>();
         builder.Services.AddTransient<BookmarksViewModel>();
         builder.Services.AddTransient<ProgressViewModel>();
         builder.Services.AddTransient<NotesViewModel>();
