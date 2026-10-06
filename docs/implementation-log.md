@@ -321,3 +321,20 @@
 - 7 stub views/VMs (Dashboard/Browse/Bookmarks/Progress/Notes/Settings/About) with
   placeholders; real content lands in Phases 19–26. All VMs registered in the host.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 18 — API Client ✅ (2026-10-07)
+
+- `Models/ApiModels.cs`: client-side contract copies (enums + all DTO shapes) —
+  deliberately not shared with the server, so this client proves the HTTP+JSON
+  contract exactly like a future mobile app would. Enums from JSON strings.
+- `Services/ApiException.cs`: status + server message; `UserMessage()` maps network/
+  timeout/unknown failures to friendly text (§20, no stack traces to users).
+- `Services/ApiClientInterfaces.cs`: 6 narrow contracts (catalog/questions/bookmarks/
+  progress/notes/dashboard) — the §21 offline seam (a local cache can implement these
+  later without UI changes).
+- `Services/StudyApiClient.cs`: single typed `HttpClient` (factory-created, 30s timeout),
+  one envelope-unwrapping `SendAsync<T>` (error body → `ApiException` with message).
+- `App.xaml.cs`: typed-client registration with `BaseAddress` from config + interface
+  mappings. New package: `Microsoft.Extensions.Http` (`AddHttpClient` lives there,
+  not in Hosting — build caught it).
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

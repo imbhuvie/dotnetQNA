@@ -27,6 +27,24 @@ public partial class App : Application
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
+        // One typed HttpClient from the factory (never newed per request, §18).
+        // The base address comes from appsettings — a single configurable place.
+        string apiBaseUrl = builder.Configuration["Api:BaseUrl"]
+            ?? throw new InvalidOperationException("Configuration 'Api:BaseUrl' is missing.");
+
+        builder.Services.AddHttpClient<StudyApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(apiBaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+
+        builder.Services.AddTransient<ICatalogApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+        builder.Services.AddTransient<IQuestionApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+        builder.Services.AddTransient<IBookmarkApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+        builder.Services.AddTransient<IProgressApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+        builder.Services.AddTransient<INotesApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+        builder.Services.AddTransient<IDashboardApiClient>(provider => provider.GetRequiredService<StudyApiClient>());
+
         // View/view-model registrations arrive in Phase 17+.
         builder.Services.AddSingleton<NavigationService>();
         builder.Services.AddSingleton<MainViewModel>();
