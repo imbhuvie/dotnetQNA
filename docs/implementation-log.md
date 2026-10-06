@@ -262,3 +262,22 @@
 - Remaining: batches 02+ continue in following turns until 1000+ (each batch re-verified
   by count query). No schema or contract changes expected.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 14 — batches 02 + 03 ✅ (30 questions total)
+
+- `questions/02-csharp-advanced.json` (10: generics, EqualityComparer, delegates,
+  events, closures, patterns, reflection, GC, IDisposable, Span) and
+  `questions/03-oop.json` (10: encapsulation, virtual/override/new, interface vs
+  abstract, composition, SOLID ×2, LSP, DIP vs DI, access modifiers, decorator,
+  overloading).
+- Process note: batches load only into an empty Questions table (by design — protects
+  user bookmarks/progress). Verifying new batches locally means deleting the dev
+  `technical_mastery.db*` and re-running. Also learned: `Remove-Item -LiteralPath`
+  does not expand wildcards — use `-Path` for `db*` deletion.
+- Bug found by live testing and fixed: list/random/related queries included `Topic`
+  but not `Topic.Category` or `Tags`, so summaries returned empty `categoryName`/`tags`
+  (detail was unaffected). All three queries now include both.
+- Full write-path verification: related lookup, bookmark add → 201, duplicate → 409
+  envelope, progress set → Completed with timestamps, note create → 201, dashboard
+  reflects 30/1/29/1/0. Follow-up list check confirms populated category/topic/tags.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

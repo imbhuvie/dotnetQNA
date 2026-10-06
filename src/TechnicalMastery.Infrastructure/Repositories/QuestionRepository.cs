@@ -50,6 +50,8 @@ public class QuestionRepository : IQuestionRepository
         IQueryable<Question> query = this.context.Questions
             .AsNoTracking()
             .Include(question => question.Topic)
+                .ThenInclude(topic => topic.Category)
+            .Include(question => question.Tags)
             .Where(question => question.IsActive);
 
         if (categoryId.HasValue)
@@ -107,6 +109,8 @@ public class QuestionRepository : IQuestionRepository
         IQueryable<Question> query = this.context.Questions
             .AsNoTracking()
             .Include(question => question.Topic)
+                .ThenInclude(topic => topic.Category)
+            .Include(question => question.Tags)
             .Where(question => question.IsActive);
 
         if (categoryId.HasValue)
@@ -144,6 +148,8 @@ public class QuestionRepository : IQuestionRepository
         List<Question> related = await this.context.Questions
             .AsNoTracking()
             .Include(question => question.Topic)
+                .ThenInclude(topic => topic.Category)
+            .Include(question => question.Tags)
             .Where(question => question.IsActive &&
                 question.Id != questionId &&
                 question.TopicId == source.TopicId)
