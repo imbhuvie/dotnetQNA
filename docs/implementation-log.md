@@ -297,3 +297,12 @@
   to the same 400 envelope. Re-ran: 40/40.
 - Backend (M1–M4) is now fully verified. Next: M5 WPF client (Phase 16+).
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 16 — WPF Project Setup ✅ (2026-10-07)
+
+- NuGet (Wpf): `CommunityToolkit.Mvvm 8.4.2`, `Microsoft.Extensions.Hosting 10.0.12`.
+- `App.xaml(.cs)`: generic-host startup (no `StartupUri`) — configuration + DI container
+  own the app lifetime; `MainWindow` resolved from the container.
+- `appsettings.json` (`Api:BaseUrl`, copied to output): the API address lives in exactly
+  one place, never hardcoded (§31).
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
