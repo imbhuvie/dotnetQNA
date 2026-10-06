@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using TechnicalMastery.Api.Middleware;
 using TechnicalMastery.Application;
+using TechnicalMastery.Application.DTOs.Common;
 using TechnicalMastery.Infrastructure;
 using TechnicalMastery.Infrastructure.Data.Seed;
 
@@ -26,6 +28,23 @@ builder.Services.AddApplication();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+// Model-binding failures (bad enums, malformed query values) never reach actions,
+// so they get the same 400 envelope here instead of the framework default.
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        List<string> errors = context.ModelState
+            .Where(entry => entry.Value?.Errors.Count > 0)
+            .SelectMany(entry => entry.Value!.Errors.Select(error => entry.Key + ": " + error.ErrorMessage))
+            .ToList();
+
+        ApiResponse<object> response = ApiResponse<object>.Fail("One or more validation errors occurred.", errors);
+
+        return new BadRequestObjectResult(response);
+    };
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

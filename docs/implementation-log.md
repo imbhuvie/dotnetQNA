@@ -281,3 +281,19 @@
   envelope, progress set → Completed with timestamps, note create → 201, dashboard
   reflects 30/1/29/1/0. Follow-up list check confirms populated category/topic/tags.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 15 — API Testing + Question-Authoring Guide ✅ (2026-10-07)
+
+- New doc `docs/question-authoring-guide.md` (concise): how seeding works, batch
+  conventions, annotated JSON schema, allowed enums (categories/topics referenced
+  from `categories.json`/`topics.json`, never duplicated), quality bar, add-and-verify
+  workflow with gotchas, and a remaining-batches tracker (30 done + 1000 target = 1030).
+- Endpoint-matrix verification (scripted, fresh DB): **40/40 green** — all 19 routes'
+  happy paths, every 404, 409 duplicate bookmark, 400s (query, sort, count, note text,
+  NotStarted status), 201 creates, dashboard aggregation, 19 Swagger paths, Swagger UI.
+- Consistency fix found by the matrix: invalid-enum routes returned the framework's
+  default problem-details instead of our envelope (model binding fails before actions).
+  `ApiBehaviorOptions.InvalidModelStateResponseFactory` in `Program.cs` now maps those
+  to the same 400 envelope. Re-ran: 40/40.
+- Backend (M1–M4) is now fully verified. Next: M5 WPF client (Phase 16+).
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
