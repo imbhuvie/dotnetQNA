@@ -365,3 +365,16 @@
 - `QuestionDetailViewModel`/view stub + template + DI registration (reader in Phase 21).
 - Live check: app launches and stays alive with API serving.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 21 — Question Detail ✅ (2026-10-07)
+
+- `QuestionDetailViewModel`: loads detail + related + notes by id; Prev/Next
+  (id-based with graceful errors), bookmark toggle, complete/needs-review,
+  related-question opening, note add/delete, back-to-browse. Reloads after every
+  mutation so bookmark/status state is always server-truth.
+- `QuestionDetailView`: sectioned reader (§13 — all 13 content areas), monospace
+  dark code block (selectable), tag pills, action bar + bookmark/status line,
+  clickable related list, inline notes with add/delete.
+- Fixed a malformed `DataTemplate` close in the tags block (build caught it).
+- Live check: app launches and stays alive with API serving.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

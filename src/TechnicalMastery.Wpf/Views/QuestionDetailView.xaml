@@ -1,5 +1,117 @@
 <UserControl x:Class="TechnicalMastery.Wpf.Views.QuestionDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <TextBlock Text="Question reader (Phase 21)" FontSize="24" Margin="16" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" MaxWidth="900">
+            <Button Content="‹ Back to browse" Command="{Binding BackToBrowseCommand}"
+                    HorizontalAlignment="Left" Margin="0,0,0,8" Padding="8,4" />
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap"
+                       Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+            <TextBlock Text="Loading..." Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <StackPanel Visibility="{Binding Detail, Converter={StaticResource NullToVisibilityConverter}}">
+                <TextBlock FontSize="12" Opacity="0.7">
+                    <Run Text="Question #" /><Run Text="{Binding Detail.Id}" />
+                    <Run Text="  •  " /><Run Text="{Binding Detail.CategoryName}" />
+                    <Run Text=" / " /><Run Text="{Binding Detail.TopicName}" />
+                    <Run Text="  •  " /><Run Text="{Binding Detail.DifficultyLevel}" />
+                </TextBlock>
+                <TextBlock Text="{Binding Detail.QuestionText}" FontSize="20" FontWeight="Bold"
+                           TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                <TextBlock Text="SHORT ANSWER" FontWeight="Bold" Margin="0,8,0,2" />
+                <TextBlock Text="{Binding Detail.ShortAnswer}" TextWrapping="Wrap" />
+
+                <TextBlock Text="DETAILED EXPLANATION" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.DetailedAnswer}" TextWrapping="Wrap" />
+
+                <TextBlock Text="EXAMPLE" FontWeight="Bold" Margin="0,12,0,2"
+                           Visibility="{Binding Detail.CodeExample, Converter={StaticResource NullToVisibilityConverter}}" />
+                <TextBox Text="{Binding Detail.CodeExample, Mode=OneWay}" IsReadOnly="True"
+                         FontFamily="Consolas" FontSize="13" Background="#1E1E2E" Foreground="#DCDCAA"
+                         Padding="8" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="0"
+                         Visibility="{Binding Detail.CodeExample, Converter={StaticResource NullToVisibilityConverter}}" />
+
+                <TextBlock Text="WHAT HAPPENS INTERNALLY" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.InternalWorking}" TextWrapping="Wrap" />
+
+                <TextBlock Text="REAL WORLD USAGE" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.RealWorldUsage}" TextWrapping="Wrap" />
+
+                <TextBlock Text="COMMON MISTAKE" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.CommonMistake}" TextWrapping="Wrap" />
+
+                <TextBlock Text="TECHNICAL CONVERSATION" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.TechnicalConversation}" TextWrapping="Wrap" />
+
+                <TextBlock Text="INTERVIEW FOLLOW-UP" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.InterviewFollowUp}" TextWrapping="Wrap" />
+
+                <TextBlock Text="KEY TAKEAWAY" FontWeight="Bold" Margin="0,12,0,2" />
+                <TextBlock Text="{Binding Detail.KeyTakeaway}" TextWrapping="Wrap" FontStyle="Italic" />
+
+                <TextBlock Text="TAGS" FontWeight="Bold" Margin="0,12,0,2" />
+                <ItemsControl ItemsSource="{Binding Detail.Tags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#E8E8F0" CornerRadius="10" Padding="8,2" Margin="0,0,6,4">
+                                <TextBlock Text="{Binding}" FontSize="12" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <WrapPanel Margin="0,16,0,0">
+                    <Button Content="‹ Previous" Command="{Binding PreviousCommand}" Padding="12,6" Margin="0,0,8,8" />
+                    <Button Content="Mark Complete" Command="{Binding MarkCompletedCommand}" Padding="12,6" Margin="0,0,8,8" />
+                    <Button Content="Needs Review" Command="{Binding MarkNeedsReviewCommand}" Padding="12,6" Margin="0,0,8,8" />
+                    <Button Content="Bookmark" Command="{Binding ToggleBookmarkCommand}" Padding="12,6" Margin="0,0,8,8" />
+                    <Button Content="Next ›" Command="{Binding NextCommand}" Padding="12,6" Margin="0,0,8,8" />
+                </WrapPanel>
+                <TextBlock Opacity="0.7" Margin="0,0,0,8">
+                    <Run Text="Bookmarked: " /><Run Text="{Binding Detail.IsBookmarked}" />
+                    <Run Text="   Status: " /><Run Text="{Binding Detail.Status}" />
+                </TextBlock>
+
+                <TextBlock Text="RELATED QUESTIONS" FontWeight="Bold" Margin="0,12,0,4" />
+                <ItemsControl ItemsSource="{Binding Related}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.OpenRelatedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}" HorizontalContentAlignment="Left"
+                                    Padding="8,4" Margin="0,0,0,4">
+                                <TextBlock Text="{Binding QuestionText}" TextWrapping="Wrap" />
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="MY NOTES" FontWeight="Bold" Margin="0,12,0,4" />
+                <ItemsControl ItemsSource="{Binding Notes}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,6">
+                                <DockPanel>
+                                    <Button Content="Delete" DockPanel.Dock="Right"
+                                            Command="{Binding DataContext.DeleteNoteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Padding="8,2" Margin="8,0,0,0" />
+                                    <TextBlock Text="{Binding NoteText}" TextWrapping="Wrap" />
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <DockPanel Margin="0,4,0,0">
+                    <Button Content="Add note" Command="{Binding AddNoteCommand}" DockPanel.Dock="Right"
+                            Padding="12,4" Margin="8,0,0,0" />
+                    <TextBox Text="{Binding NewNoteText, UpdateSourceTrigger=PropertyChanged}" Padding="8,4" />
+                </DockPanel>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
