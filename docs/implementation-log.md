@@ -200,3 +200,17 @@
 - Runtime check: `?page=0&pageSize=500` is rejected (500 today = ValidationException
   escaping; Phase 11 maps it to a 400 envelope), valid queries still 200.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 11 — Global Exception Handling ✅ (2026-10-07)
+
+- `Api/Middleware/ExceptionHandlingMiddleware.cs`: try/catch around the whole pipeline,
+  mapping exceptions to the `ApiResponse` envelope — NotFound→404, Conflict→409,
+  FluentValidation→400 (per-field `Property: message` errors), Argument→400, all
+  else→500 with a generic message. Stack traces are logged server-side (ILogger:
+  Error for 500s, Warning for handled) and never leave the server (§20).
+  Registered first in `Program.cs`, so every failure exits uniformly.
+- Api references core `FluentValidation 12.1.1` (exception type only — no rules in Api).
+- Live verification: 200 categories; 404 `Category with id 999 was not found.`;
+  400 with `["Page: Page must be 1 or greater.", "PageSize: PageSize must be between
+  1 and 100."]`; 404 bookmarking nonexistent question. All in-envelope, camelCase.
+- Verified: full-solution `dotnet build` — 0 errors.

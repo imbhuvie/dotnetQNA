@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using TechnicalMastery.Api.Middleware;
 using TechnicalMastery.Application;
 using TechnicalMastery.Infrastructure;
 
@@ -18,6 +19,10 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Global exception handling runs first so every failure leaves this
+// pipeline as a uniform ApiResponse envelope (never a stack trace).
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
