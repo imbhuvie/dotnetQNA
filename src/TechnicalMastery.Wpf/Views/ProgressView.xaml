@@ -1,5 +1,63 @@
 <UserControl x:Class="TechnicalMastery.Wpf.Views.ProgressView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <TextBlock Text="Progress (Phase 24)" FontSize="24" Margin="16" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" MaxWidth="900">
+            <TextBlock Text="Study Progress" FontSize="26" FontWeight="Bold" />
+            <TextBlock Text="Track your learning journey across all questions" FontSize="14" Opacity="0.7" Margin="0,0,0,12" />
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap"
+                       Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+            <TextBlock Text="Loading..." Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <!-- Filter -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <TextBlock Text="Filter by status:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <ComboBox ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding FilterStatus}"
+                          Width="180" Margin="0,0,8,0" />
+                <Button Content="Apply" Command="{Binding FilterChangedCommand}" Padding="12,4" />
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding Entries}" Visibility="{Binding Entries.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Command="{Binding DataContext.OpenQuestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}" HorizontalContentAlignment="Stretch" Padding="0">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding QuestionId, StringFormat='Question #{0}'}" FontWeight="Bold" FontSize="15" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                            <Border Background="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"
+                                                    CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                <TextBlock Text="{Binding Status}" Foreground="White" FontSize="12" FontWeight="Bold" />
+                                            </Border>
+                                            <TextBlock Opacity="0.7">
+                                                <Run Text="Last viewed: " /><Run Text="{Binding LastViewedAt, Converter={StaticResource DateTimeToStringConverter}}" />
+                                                <Run Text="  " /><Run Text="Completed: " /><Run Text="{Binding CompletedAt, Converter={StaticResource NullableDateTimeToStringConverter}}" />
+                                                <Run Text="  " /><Run Text="Reviews: " /><Run Text="{Binding ReviewCount}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock Grid.Column="1" Text="{Binding ReviewCount}" FontWeight="Bold" FontSize="16"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16,0" />
+                                <Button Grid.Column="2" Content="Open" Command="{Binding DataContext.OpenQuestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}" Padding="12,6" Margin="16,0,0,0" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="No progress entries yet. Start studying questions to track your progress."
+                       Opacity="0.6" Margin="0,16,0,0"
+                       Visibility="{Binding Entries.Count, Converter={StaticResource ZeroToVisibilityConverter}}" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

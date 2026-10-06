@@ -39,6 +39,8 @@ public interface IBookmarkApiClient
 
 public interface IProgressApiClient
 {
+    Task<IReadOnlyList<StudyProgressModel>> GetAllProgressAsync(CancellationToken ct);
+
     Task SetStatusAsync(int questionId, StudyStatus status, CancellationToken ct);
 }
 

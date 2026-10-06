@@ -8,5 +8,7 @@
         <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
         <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter" />
         <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <converters:NullableDateTimeToStringConverter x:Key="NullableDateTimeToStringConverter" />
+        <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
     </Application.Resources>
 </Application>

@@ -117,6 +117,11 @@ public class StudyApiClient :
         await SendAsync<StudyProgressModel>(HttpMethod.Post, "api/progress/" + questionId, new { status = status.ToString() }, ct);
     }
 
+    public async Task<IReadOnlyList<StudyProgressModel>> GetAllProgressAsync(CancellationToken ct)
+    {
+        return await GetAsync<List<StudyProgressModel>>("api/progress", ct) ?? new List<StudyProgressModel>();
+    }
+
     public async Task<IReadOnlyList<QuestionNoteModel>> GetByQuestionAsync(int questionId, CancellationToken ct)
     {
         return await GetAsync<List<QuestionNoteModel>>("api/notes/question/" + questionId, ct)

@@ -397,3 +397,15 @@
   `DateTimeToString` (formats DateTime as "yyyy-MM-dd HH:mm"); registered app-wide.
 - Fixed StringFormat-in-Run XAML issue by using a converter.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings; app launches.
+
+## Phase 24 — Progress Screen ✅ (2026-10-07)
+
+- `ProgressViewModel`: loads all progress via `IProgressApiClient.GetAllProgressAsync`; filter
+  by `StudyStatus` (All/NotStarted/Learning/Completed/NeedsReview) with Apply button;
+  `OpenQuestionCommand` navigates to detail with the question id.
+- `ProgressView`: filter combo + rows with status badge (colored via `StatusToBrushConverter`),
+  last viewed/completed dates, review count, "Open" button; empty state when no entries.
+- Added converters: `NullableDateTimeToString` (empty for null), `StatusToBrush` (status →
+  colored brush: gray/blue/green/orange); registered app-wide.
+- API interface updated: `IProgressApiClient.GetAllProgressAsync` + `StudyApiClient` impl.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings; app launches.
