@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TechnicalMastery.Application.Interfaces;
 using TechnicalMastery.Infrastructure.Data;
+using TechnicalMastery.Infrastructure.Data.Seed;
 using TechnicalMastery.Infrastructure.Repositories;
 
 namespace TechnicalMastery.Infrastructure;
@@ -29,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<IBookmarkRepository, BookmarkRepository>();
         services.AddScoped<IStudyProgressRepository, StudyProgressRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
+
+        services.AddScoped<DatabaseSeeder>();
 
         return services;
     }

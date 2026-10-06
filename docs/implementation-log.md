@@ -241,3 +241,24 @@
 - Live verification: `/swagger/v1/swagger.json` lists all 19 routes across the 7
   controllers; `/swagger/index.html` returns 200.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 14 — Seed Data (in progress) ✅ infra + batch 1 (2026-10-07)
+
+- `Infrastructure/Data/Seed/`: `SeedModels.cs` (category/topic/question shapes; questions
+  reference catalog by NAME, enums parse from names with clear errors on typos),
+  `DatabaseSeeder.cs` (applies pending migrations via `MigrateAsync`, then loads content;
+  idempotent — categories/topics upsert by name, question batches load only into an
+  empty table, tags normalized lowercase/distinct), JSON embedded resources
+  (`categories.json`, `topics.json`, `questions/*.json` — new batches auto-discovered
+  by naming convention, never `Program.cs`).
+- `DatabaseSeeder` registered in `AddInfrastructure`; `Api/Program.cs` runs it at startup
+  inside a scope (safe on every boot).
+- Content: `categories.json` (all 25 catalog categories), `topics.json` (84 topics across
+  every category), `questions/01-csharp-fundamentals.json` (10 full-field questions:
+  var/typing, value-vs-reference, boxing, string immutability, properties, records,
+  exception practices, ref/out/in, ctors, throw semantics).
+- Live verification: 25 categories, 84 topics, 10 questions; dashboard aggregates;
+  detail returns tags; `search?query=boxing` finds its question.
+- Remaining: batches 02+ continue in following turns until 1000+ (each batch re-verified
+  by count query). No schema or contract changes expected.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

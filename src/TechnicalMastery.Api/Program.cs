@@ -3,6 +3,7 @@ using Serilog;
 using TechnicalMastery.Api.Middleware;
 using TechnicalMastery.Application;
 using TechnicalMastery.Infrastructure;
+using TechnicalMastery.Infrastructure.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,15 @@ app.MapControllers();
 try
 {
     Log.Information("TechnicalMastery API started in {Environment}.", app.Environment.EnvironmentName);
+
+    // Applies pending migrations, then loads categories/topics/question batches.
+    // Idempotent: safe to run on every startup.
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        DatabaseSeeder seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+        await seeder.SeedAsync(CancellationToken.None);
+    }
+
     app.Run();
 }
 catch (Exception ex)
