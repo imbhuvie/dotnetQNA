@@ -1,5 +1,7 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 
 namespace TechnicalMastery.Application.Services;
@@ -18,12 +20,14 @@ public class TopicService : ITopicService
         this.categories = categories;
     }
 
-    public Task<IReadOnlyList<Topic>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TopicDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return this.topics.GetAllAsync(cancellationToken);
+        IReadOnlyList<Topic> result = await this.topics.GetAllAsync(cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<IReadOnlyList<Topic>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TopicDto>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken)
     {
         bool exists = await this.categories.ExistsAsync(categoryId, cancellationToken);
 
@@ -32,10 +36,12 @@ public class TopicService : ITopicService
             throw new NotFoundException("Category", categoryId);
         }
 
-        return await this.topics.GetByCategoryAsync(categoryId, cancellationToken);
+        IReadOnlyList<Topic> result = await this.topics.GetByCategoryAsync(categoryId, cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<Topic> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<TopicDto> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         Topic? topic = await this.topics.GetByIdAsync(id, cancellationToken);
 
@@ -44,6 +50,6 @@ public class TopicService : ITopicService
             throw new NotFoundException("Topic", id);
         }
 
-        return topic;
+        return DtoMapper.ToDto(topic);
     }
 }

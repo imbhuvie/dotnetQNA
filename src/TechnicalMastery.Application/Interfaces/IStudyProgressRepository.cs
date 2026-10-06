@@ -15,4 +15,9 @@ public interface IStudyProgressRepository
     Task UpsertAsync(StudyProgress progress, CancellationToken cancellationToken);
 
     Task<int> CountByStatusAsync(StudyStatus status, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// QuestionId → Status for all tracked questions in one query (for list enrichment).
+    /// </summary>
+    Task<IReadOnlyDictionary<int, StudyStatus>> GetStatusMapAsync(CancellationToken cancellationToken);
 }

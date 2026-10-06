@@ -1,5 +1,7 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 
 namespace TechnicalMastery.Application.Services;
@@ -16,12 +18,14 @@ public class CategoryService : ICategoryService
         this.categories = categories;
     }
 
-    public Task<IReadOnlyList<Category>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return this.categories.GetAllAsync(cancellationToken);
+        IReadOnlyList<Category> result = await this.categories.GetAllAsync(cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<Category> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<CategoryDto> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         Category? category = await this.categories.GetByIdAsync(id, cancellationToken);
 
@@ -30,6 +34,6 @@ public class CategoryService : ICategoryService
             throw new NotFoundException("Category", id);
         }
 
-        return category;
+        return DtoMapper.ToDto(category);
     }
 }

@@ -142,3 +142,22 @@
   (new `Microsoft.Extensions.DependencyInjection.Abstractions 10.0.12` reference);
   `Api/Program.cs` calls it. Controllers will depend on `I*Service` only (Rule 7).
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 8 — DTOs ✅ (2026-10-07)
+
+- `DTOs/Common/`: `ApiResponse<T>` (uniform `success/message/data/errors` envelope with
+  `Ok`/`Fail` factories) and `PagedResult<T>` (items + page/pageSize/totalCount/totalPages).
+- Entity DTOs: `CategoryDto`, `TopicDto`, `QuestionSummaryDto` (list row + IsBookmarked +
+  Status, no answer body), `QuestionDetailDto` (all 13 content sections + placement +
+  tags + user state), `BookmarkDto`, `StudyProgressDto`, `QuestionNoteDto`,
+  `DashboardSummaryDto` (+ `CategoryProgressDto` with `PercentComplete`).
+- Request/query shapes: `QuestionsQuery` (page 1/size 20 defaults, all filters),
+  `CreateNoteRequest`/`UpdateNoteRequest`, `UpdateProgressRequest`.
+- `Mappings/DtoMapper`: handwritten static entity→DTO mapping (no AutoMapper — every
+  mapping is explicit, §37). Null-safe on optional navigations.
+- Services now return DTOs (entities never leave Application, Rule 9): all 6 service
+  contracts + implementations adapted; `QuestionService` enriches via two bulk lookups
+  (`GetBookmarkedQuestionIdsAsync`, `GetStatusMapAsync` — new repo methods, no N+1).
+- New `IDashboardService`/`DashboardService`: totals, remaining, bookmark/needs-review
+  counts, per-category rows ordered by category; registered in `AddApplication`.
+- Verified: full-solution `dotnet build` — 0 errors.

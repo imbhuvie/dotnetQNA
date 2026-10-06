@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IBookmarkService, BookmarkService>();
         services.AddScoped<IStudyProgressService, StudyProgressService>();
         services.AddScoped<INoteService, NoteService>();
+        services.AddScoped<IDashboardService, DashboardService>();
 
         return services;
     }

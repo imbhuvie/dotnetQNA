@@ -58,4 +58,13 @@ public class StudyProgressRepository : IStudyProgressRepository
     {
         return this.context.StudyProgressEntries.CountAsync(progress => progress.Status == status, cancellationToken);
     }
+
+    public async Task<IReadOnlyDictionary<int, StudyStatus>> GetStatusMapAsync(CancellationToken cancellationToken)
+    {
+        Dictionary<int, StudyStatus> map = await this.context.StudyProgressEntries
+            .AsNoTracking()
+            .ToDictionaryAsync(progress => progress.QuestionId, progress => progress.Status, cancellationToken);
+
+        return map;
+    }
 }

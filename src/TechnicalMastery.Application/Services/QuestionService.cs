@@ -1,30 +1,40 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
+using TechnicalMastery.Application.DTOs.Common;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 using TechnicalMastery.Domain.Enums;
 
 namespace TechnicalMastery.Application.Services;
 
 /// <summary>
-/// Question query use cases.
+/// Question query use cases. Every outward shape is enriched with the
+/// current user's bookmark/progress state via two bulk lookups.
 /// </summary>
 public class QuestionService : IQuestionService
 {
     private readonly IQuestionRepository questions;
     private readonly ICategoryRepository categories;
     private readonly ITopicRepository topics;
+    private readonly IBookmarkRepository bookmarks;
+    private readonly IStudyProgressRepository progressEntries;
 
     public QuestionService(
         IQuestionRepository questions,
         ICategoryRepository categories,
-        ITopicRepository topics)
+        ITopicRepository topics,
+        IBookmarkRepository bookmarks,
+        IStudyProgressRepository progressEntries)
     {
         this.questions = questions;
         this.categories = categories;
         this.topics = topics;
+        this.bookmarks = bookmarks;
+        this.progressEntries = progressEntries;
     }
 
-    public async Task<Question> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<QuestionDetailDto> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         Question? question = await this.questions.GetByIdAsync(id, cancellationToken);
 
@@ -33,29 +43,26 @@ public class QuestionService : IQuestionService
             throw new NotFoundException("Question", id);
         }
 
-        return question;
+        bool isBookmarked = await this.bookmarks.ExistsAsync(id, cancellationToken);
+        StudyProgress? progress = await this.progressEntries.GetByQuestionIdAsync(id, cancellationToken);
+
+        return DtoMapper.ToDetailDto(question, isBookmarked, progress?.Status ?? StudyStatus.NotStarted);
     }
 
-    public async Task<(IReadOnlyList<Question> Items, int TotalCount)> GetPagedAsync(
-        int page,
-        int pageSize,
-        int? categoryId,
-        int? topicId,
-        DifficultyLevel? difficulty,
-        QuestionType? type,
-        string? search,
-        string? sortBy,
-        bool descending,
-        CancellationToken cancellationToken)
+    public async Task<PagedResult<QuestionSummaryDto>> GetPagedAsync(QuestionsQuery query, CancellationToken cancellationToken)
     {
-        await ValidateFiltersAsync(categoryId, topicId, cancellationToken);
+        await ValidateFiltersAsync(query.CategoryId, query.TopicId, cancellationToken);
 
-        return await this.questions.GetPagedAsync(
-            page, pageSize, categoryId, topicId, difficulty, type,
-            search, sortBy, descending, cancellationToken);
+        (IReadOnlyList<Question> items, int totalCount) = await this.questions.GetPagedAsync(
+            query.Page, query.PageSize, query.CategoryId, query.TopicId, query.Difficulty,
+            query.Type, query.Search, query.SortBy, query.Descending, cancellationToken);
+
+        List<QuestionSummaryDto> summaries = await ToSummariesAsync(items, cancellationToken);
+
+        return DtoMapper.ToPagedResult(summaries, totalCount, query.Page, query.PageSize);
     }
 
-    public async Task<IReadOnlyList<Question>> GetRandomAsync(
+    public async Task<IReadOnlyList<QuestionSummaryDto>> GetRandomAsync(
         int count,
         int? categoryId,
         DifficultyLevel? difficulty,
@@ -63,10 +70,12 @@ public class QuestionService : IQuestionService
     {
         await ValidateFiltersAsync(categoryId, null, cancellationToken);
 
-        return await this.questions.GetRandomAsync(count, categoryId, difficulty, cancellationToken);
+        IReadOnlyList<Question> items = await this.questions.GetRandomAsync(count, categoryId, difficulty, cancellationToken);
+
+        return await ToSummariesAsync(items, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Question>> GetRelatedAsync(int questionId, int count, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionSummaryDto>> GetRelatedAsync(int questionId, int count, CancellationToken cancellationToken)
     {
         bool exists = await this.questions.ExistsAsync(questionId, cancellationToken);
 
@@ -75,12 +84,31 @@ public class QuestionService : IQuestionService
             throw new NotFoundException("Question", questionId);
         }
 
-        return await this.questions.GetRelatedAsync(questionId, count, cancellationToken);
+        IReadOnlyList<Question> items = await this.questions.GetRelatedAsync(questionId, count, cancellationToken);
+
+        return await ToSummariesAsync(items, cancellationToken);
     }
 
     public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
     {
         return this.questions.CountAsync(cancellationToken);
+    }
+
+    private async Task<List<QuestionSummaryDto>> ToSummariesAsync(IReadOnlyList<Question> items, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<int> bookmarkedIds = await this.bookmarks.GetBookmarkedQuestionIdsAsync(cancellationToken);
+        IReadOnlyDictionary<int, StudyStatus> statusMap = await this.progressEntries.GetStatusMapAsync(cancellationToken);
+
+        HashSet<int> bookmarked = new HashSet<int>(bookmarkedIds);
+
+        List<QuestionSummaryDto> summaries = items
+            .Select(question => DtoMapper.ToSummaryDto(
+                question,
+                bookmarked.Contains(question.Id),
+                statusMap.TryGetValue(question.Id, out StudyStatus status) ? status : StudyStatus.NotStarted))
+            .ToList();
+
+        return summaries;
     }
 
     private async Task ValidateFiltersAsync(int? categoryId, int? topicId, CancellationToken cancellationToken)

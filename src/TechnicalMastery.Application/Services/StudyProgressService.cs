@@ -1,5 +1,7 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 using TechnicalMastery.Domain.Enums;
 
@@ -19,12 +21,14 @@ public class StudyProgressService : IStudyProgressService
         this.questions = questions;
     }
 
-    public Task<IReadOnlyList<StudyProgress>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<StudyProgressDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return this.progressEntries.GetAllAsync(cancellationToken);
+        IReadOnlyList<StudyProgress> result = await this.progressEntries.GetAllAsync(cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<StudyProgress> MarkViewedAsync(int questionId, CancellationToken cancellationToken)
+    public async Task<StudyProgressDto> MarkViewedAsync(int questionId, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
 
@@ -43,7 +47,7 @@ public class StudyProgressService : IStudyProgressService
 
             await this.progressEntries.UpsertAsync(created, cancellationToken);
 
-            return created;
+            return DtoMapper.ToDto(created);
         }
 
         existing.LastViewedAt = now;
@@ -55,10 +59,10 @@ public class StudyProgressService : IStudyProgressService
 
         await this.progressEntries.UpsertAsync(existing, cancellationToken);
 
-        return existing;
+        return DtoMapper.ToDto(existing);
     }
 
-    public async Task<StudyProgress> MarkCompletedAsync(int questionId, CancellationToken cancellationToken)
+    public async Task<StudyProgressDto> MarkCompletedAsync(int questionId, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
 
@@ -78,7 +82,7 @@ public class StudyProgressService : IStudyProgressService
 
             await this.progressEntries.UpsertAsync(created, cancellationToken);
 
-            return created;
+            return DtoMapper.ToDto(created);
         }
 
         existing.Status = StudyStatus.Completed;
@@ -87,10 +91,10 @@ public class StudyProgressService : IStudyProgressService
 
         await this.progressEntries.UpsertAsync(existing, cancellationToken);
 
-        return existing;
+        return DtoMapper.ToDto(existing);
     }
 
-    public async Task<StudyProgress> MarkNeedsReviewAsync(int questionId, CancellationToken cancellationToken)
+    public async Task<StudyProgressDto> MarkNeedsReviewAsync(int questionId, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
 
@@ -109,7 +113,7 @@ public class StudyProgressService : IStudyProgressService
 
             await this.progressEntries.UpsertAsync(created, cancellationToken);
 
-            return created;
+            return DtoMapper.ToDto(created);
         }
 
         existing.Status = StudyStatus.NeedsReview;
@@ -118,7 +122,7 @@ public class StudyProgressService : IStudyProgressService
 
         await this.progressEntries.UpsertAsync(existing, cancellationToken);
 
-        return existing;
+        return DtoMapper.ToDto(existing);
     }
 
     private async Task EnsureQuestionExistsAsync(int questionId, CancellationToken cancellationToken)

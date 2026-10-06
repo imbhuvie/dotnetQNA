@@ -59,4 +59,14 @@ public class BookmarkRepository : IBookmarkRepository
     {
         return this.context.Bookmarks.CountAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<int>> GetBookmarkedQuestionIdsAsync(CancellationToken cancellationToken)
+    {
+        List<int> ids = await this.context.Bookmarks
+            .AsNoTracking()
+            .Select(bookmark => bookmark.QuestionId)
+            .ToListAsync(cancellationToken);
+
+        return ids;
+    }
 }

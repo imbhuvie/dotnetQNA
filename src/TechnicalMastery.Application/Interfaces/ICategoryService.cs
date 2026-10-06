@@ -1,13 +1,14 @@
-using TechnicalMastery.Domain.Entities;
+using TechnicalMastery.Application.DTOs;
 
 namespace TechnicalMastery.Application.Interfaces;
 
 /// <summary>
-/// Category use cases (seeded read-only content).
+/// Category use cases (seeded read-only content). Returns DTOs only —
+/// entities never leave the Application layer (Rule 9).
 /// </summary>
 public interface ICategoryService
 {
-    Task<IReadOnlyList<Category>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<Category> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<CategoryDto> GetByIdAsync(int id, CancellationToken cancellationToken);
 }

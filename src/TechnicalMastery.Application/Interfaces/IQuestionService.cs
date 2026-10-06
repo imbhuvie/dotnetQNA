@@ -1,34 +1,26 @@
-using TechnicalMastery.Domain.Entities;
+using TechnicalMastery.Application.DTOs;
+using TechnicalMastery.Application.DTOs.Common;
 using TechnicalMastery.Domain.Enums;
 
 namespace TechnicalMastery.Application.Interfaces;
 
 /// <summary>
-/// Question query use cases (seeded read-only content).
+/// Question query use cases. Summaries and details carry the current user's
+/// bookmark/progress state. Returns DTOs only (Rule 9).
 /// </summary>
 public interface IQuestionService
 {
-    Task<Question> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<QuestionDetailDto> GetByIdAsync(int id, CancellationToken cancellationToken);
 
-    Task<(IReadOnlyList<Question> Items, int TotalCount)> GetPagedAsync(
-        int page,
-        int pageSize,
-        int? categoryId,
-        int? topicId,
-        DifficultyLevel? difficulty,
-        QuestionType? type,
-        string? search,
-        string? sortBy,
-        bool descending,
-        CancellationToken cancellationToken);
+    Task<PagedResult<QuestionSummaryDto>> GetPagedAsync(QuestionsQuery query, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Question>> GetRandomAsync(
+    Task<IReadOnlyList<QuestionSummaryDto>> GetRandomAsync(
         int count,
         int? categoryId,
         DifficultyLevel? difficulty,
         CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Question>> GetRelatedAsync(int questionId, int count, CancellationToken cancellationToken);
+    Task<IReadOnlyList<QuestionSummaryDto>> GetRelatedAsync(int questionId, int count, CancellationToken cancellationToken);
 
     Task<int> GetTotalCountAsync(CancellationToken cancellationToken);
 }

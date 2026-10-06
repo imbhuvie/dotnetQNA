@@ -1,5 +1,7 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 
 namespace TechnicalMastery.Application.Services;
@@ -18,16 +20,18 @@ public class BookmarkService : IBookmarkService
         this.questions = questions;
     }
 
-    public Task<IReadOnlyList<Bookmark>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<BookmarkDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return this.bookmarks.GetAllAsync(cancellationToken);
+        IReadOnlyList<Bookmark> result = await this.bookmarks.GetAllAsync(cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<Bookmark> AddAsync(int questionId, CancellationToken cancellationToken)
+    public async Task<BookmarkDto> AddAsync(int questionId, CancellationToken cancellationToken)
     {
-        bool questionExists = await this.questions.ExistsAsync(questionId, cancellationToken);
+        Question? question = await this.questions.GetByIdAsync(questionId, cancellationToken);
 
-        if (!questionExists)
+        if (question is null)
         {
             throw new NotFoundException("Question", questionId);
         }
@@ -47,7 +51,9 @@ public class BookmarkService : IBookmarkService
 
         await this.bookmarks.AddAsync(bookmark, cancellationToken);
 
-        return bookmark;
+        bookmark.Question = question;
+
+        return DtoMapper.ToDto(bookmark);
     }
 
     public async Task RemoveAsync(int questionId, CancellationToken cancellationToken)

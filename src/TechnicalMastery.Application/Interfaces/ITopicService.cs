@@ -1,15 +1,15 @@
-using TechnicalMastery.Domain.Entities;
+using TechnicalMastery.Application.DTOs;
 
 namespace TechnicalMastery.Application.Interfaces;
 
 /// <summary>
-/// Topic use cases (seeded read-only content).
+/// Topic use cases (seeded read-only content). Returns DTOs only (Rule 9).
 /// </summary>
 public interface ITopicService
 {
-    Task<IReadOnlyList<Topic>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<TopicDto>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Topic>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TopicDto>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken);
 
-    Task<Topic> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<TopicDto> GetByIdAsync(int id, CancellationToken cancellationToken);
 }

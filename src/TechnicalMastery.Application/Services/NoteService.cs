@@ -1,5 +1,7 @@
 using TechnicalMastery.Application.Common.Exceptions;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
+using TechnicalMastery.Application.Mappings;
 using TechnicalMastery.Domain.Entities;
 
 namespace TechnicalMastery.Application.Services;
@@ -18,14 +20,16 @@ public class NoteService : INoteService
         this.questions = questions;
     }
 
-    public async Task<IReadOnlyList<QuestionNote>> GetByQuestionAsync(int questionId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionNoteDto>> GetByQuestionAsync(int questionId, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
 
-        return await this.notes.GetByQuestionIdAsync(questionId, cancellationToken);
+        IReadOnlyList<QuestionNote> result = await this.notes.GetByQuestionIdAsync(questionId, cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
     }
 
-    public async Task<QuestionNote> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<QuestionNoteDto> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         QuestionNote? note = await this.notes.GetByIdAsync(id, cancellationToken);
 
@@ -34,10 +38,10 @@ public class NoteService : INoteService
             throw new NotFoundException("Note", id);
         }
 
-        return note;
+        return DtoMapper.ToDto(note);
     }
 
-    public async Task<QuestionNote> CreateAsync(int questionId, string noteText, CancellationToken cancellationToken)
+    public async Task<QuestionNoteDto> CreateAsync(int questionId, string noteText, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
 
@@ -58,12 +62,17 @@ public class NoteService : INoteService
 
         await this.notes.AddAsync(note, cancellationToken);
 
-        return note;
+        return DtoMapper.ToDto(note);
     }
 
-    public async Task<QuestionNote> UpdateAsync(int id, string noteText, CancellationToken cancellationToken)
+    public async Task<QuestionNoteDto> UpdateAsync(int id, string noteText, CancellationToken cancellationToken)
     {
-        QuestionNote note = await GetByIdAsync(id, cancellationToken);
+        QuestionNote? note = await this.notes.GetByIdAsync(id, cancellationToken);
+
+        if (note is null)
+        {
+            throw new NotFoundException("Note", id);
+        }
 
         if (string.IsNullOrWhiteSpace(noteText))
         {
@@ -75,7 +84,7 @@ public class NoteService : INoteService
 
         await this.notes.UpdateAsync(note, cancellationToken);
 
-        return note;
+        return DtoMapper.ToDto(note);
     }
 
     public async Task DeleteAsync(int id, CancellationToken cancellationToken)

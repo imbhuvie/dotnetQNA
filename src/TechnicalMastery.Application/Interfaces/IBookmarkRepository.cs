@@ -16,4 +16,9 @@ public interface IBookmarkRepository
     Task<bool> RemoveAsync(int questionId, CancellationToken cancellationToken);
 
     Task<int> CountAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// All bookmarked question ids in one query (for list enrichment).
+    /// </summary>
+    Task<IReadOnlyList<int>> GetBookmarkedQuestionIdsAsync(CancellationToken cancellationToken);
 }
