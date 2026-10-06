@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.DTOs.Common;
 using TechnicalMastery.Application.Interfaces;
-using TechnicalMastery.Domain.Enums;
 
 namespace TechnicalMastery.Api.Controllers;
 
@@ -40,13 +39,7 @@ public class ProgressController : ControllerBase
         [FromBody] UpdateProgressRequest request,
         CancellationToken cancellationToken)
     {
-        StudyProgressDto result = request.Status switch
-        {
-            StudyStatus.Learning => await this.progress.MarkViewedAsync(questionId, cancellationToken),
-            StudyStatus.Completed => await this.progress.MarkCompletedAsync(questionId, cancellationToken),
-            StudyStatus.NeedsReview => await this.progress.MarkNeedsReviewAsync(questionId, cancellationToken),
-            _ => throw new ArgumentException("Status must be Learning, Completed or NeedsReview.", nameof(request))
-        };
+        StudyProgressDto result = await this.progress.SetStatusAsync(questionId, request, cancellationToken);
 
         return Ok(ApiResponse<StudyProgressDto>.Ok(result, "Study progress updated successfully."));
     }

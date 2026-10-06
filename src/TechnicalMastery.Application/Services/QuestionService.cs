@@ -1,3 +1,4 @@
+using FluentValidation;
 using TechnicalMastery.Application.Common.Exceptions;
 using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.DTOs.Common;
@@ -19,19 +20,22 @@ public class QuestionService : IQuestionService
     private readonly ITopicRepository topics;
     private readonly IBookmarkRepository bookmarks;
     private readonly IStudyProgressRepository progressEntries;
+    private readonly IValidator<QuestionsQuery> queryValidator;
 
     public QuestionService(
         IQuestionRepository questions,
         ICategoryRepository categories,
         ITopicRepository topics,
         IBookmarkRepository bookmarks,
-        IStudyProgressRepository progressEntries)
+        IStudyProgressRepository progressEntries,
+        IValidator<QuestionsQuery> queryValidator)
     {
         this.questions = questions;
         this.categories = categories;
         this.topics = topics;
         this.bookmarks = bookmarks;
         this.progressEntries = progressEntries;
+        this.queryValidator = queryValidator;
     }
 
     public async Task<QuestionDetailDto> GetByIdAsync(int id, CancellationToken cancellationToken)
@@ -51,6 +55,8 @@ public class QuestionService : IQuestionService
 
     public async Task<PagedResult<QuestionSummaryDto>> GetPagedAsync(QuestionsQuery query, CancellationToken cancellationToken)
     {
+        await this.queryValidator.ValidateAndThrowAsync(query, cancellationToken);
+
         await ValidateFiltersAsync(query.CategoryId, query.TopicId, cancellationToken);
 
         (IReadOnlyList<Question> items, int totalCount) = await this.questions.GetPagedAsync(
@@ -68,6 +74,8 @@ public class QuestionService : IQuestionService
         DifficultyLevel? difficulty,
         CancellationToken cancellationToken)
     {
+        ValidateCount(count);
+
         await ValidateFiltersAsync(categoryId, null, cancellationToken);
 
         IReadOnlyList<Question> items = await this.questions.GetRandomAsync(count, categoryId, difficulty, cancellationToken);
@@ -77,6 +85,8 @@ public class QuestionService : IQuestionService
 
     public async Task<IReadOnlyList<QuestionSummaryDto>> GetRelatedAsync(int questionId, int count, CancellationToken cancellationToken)
     {
+        ValidateCount(count);
+
         bool exists = await this.questions.ExistsAsync(questionId, cancellationToken);
 
         if (!exists)
@@ -92,6 +102,14 @@ public class QuestionService : IQuestionService
     public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
     {
         return this.questions.CountAsync(cancellationToken);
+    }
+
+    private static void ValidateCount(int count)
+    {
+        if (count is < 1 or > 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be between 1 and 100.");
+        }
     }
 
     private async Task<List<QuestionSummaryDto>> ToSummariesAsync(IReadOnlyList<Question> items, CancellationToken cancellationToken)

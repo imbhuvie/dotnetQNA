@@ -53,7 +53,7 @@ public class NotesController : ControllerBase
         [FromBody] CreateNoteRequest request,
         CancellationToken cancellationToken)
     {
-        QuestionNoteDto result = await this.notes.CreateAsync(questionId, request.NoteText, cancellationToken);
+        QuestionNoteDto result = await this.notes.CreateAsync(questionId, request, cancellationToken);
 
         return StatusCode(
             StatusCodes.Status201Created,
@@ -70,7 +70,7 @@ public class NotesController : ControllerBase
         [FromBody] UpdateNoteRequest request,
         CancellationToken cancellationToken)
     {
-        QuestionNoteDto result = await this.notes.UpdateAsync(id, request.NoteText, cancellationToken);
+        QuestionNoteDto result = await this.notes.UpdateAsync(id, request, cancellationToken);
 
         return Ok(ApiResponse<QuestionNoteDto>.Ok(result, "Note updated successfully."));
     }

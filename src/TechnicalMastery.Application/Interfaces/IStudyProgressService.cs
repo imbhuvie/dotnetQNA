@@ -16,4 +16,9 @@ public interface IStudyProgressService
     Task<StudyProgressDto> MarkCompletedAsync(int questionId, CancellationToken cancellationToken);
 
     Task<StudyProgressDto> MarkNeedsReviewAsync(int questionId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Validates the requested status and dispatches to the matching transition.
+    /// </summary>
+    Task<StudyProgressDto> SetStatusAsync(int questionId, UpdateProgressRequest request, CancellationToken cancellationToken);
 }

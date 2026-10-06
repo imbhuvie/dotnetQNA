@@ -181,3 +181,22 @@
   shape and camelCase JSON. 404 paths still bubble as 500 until Phase 11 middleware —
   expected, fixed next.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 10 — Validation ✅ (2026-10-07)
+
+- NuGet (Application): `FluentValidation` (core only — no DI scanning package).
+- 4 validators in `Application/Validators/` (rules live server-side, client-independent):
+  `QuestionsQueryValidator` (page ≥ 1, size 1–100, search ≤ 200, sortBy ∈ id/difficulty/
+  newest), `Create/UpdateNoteRequestValidator` (text required, ≤ 4000),
+  `UpdateProgressRequestValidator` (Learning/Completed/NeedsReview only — NotStarted is
+  a system state, never client-set).
+- Wired into services (not controllers): `QuestionService` validates the query plus
+  guards random/related counts (1–100); `NoteService` takes the request DTOs and
+  validates (manual empty-checks removed); new `StudyProgressService.SetStatusAsync`
+  validates then dispatches — `ProgressController` is now a one-liner.
+  `INoteService` signatures now accept `Create/UpdateNoteRequest`.
+- `AddApplication` registers the four validators explicitly (no assembly scanning —
+  the full set is visible in one place).
+- Runtime check: `?page=0&pageSize=500` is rejected (500 today = ValidationException
+  escaping; Phase 11 maps it to a 400 envelope), valid queries still 200.
+- Verified: full-solution `dotnet build` — 0 errors.

@@ -12,9 +12,9 @@ public interface INoteService
 
     Task<QuestionNoteDto> GetByIdAsync(int id, CancellationToken cancellationToken);
 
-    Task<QuestionNoteDto> CreateAsync(int questionId, string noteText, CancellationToken cancellationToken);
+    Task<QuestionNoteDto> CreateAsync(int questionId, CreateNoteRequest request, CancellationToken cancellationToken);
 
-    Task<QuestionNoteDto> UpdateAsync(int id, string noteText, CancellationToken cancellationToken);
+    Task<QuestionNoteDto> UpdateAsync(int id, UpdateNoteRequest request, CancellationToken cancellationToken);
 
     Task DeleteAsync(int id, CancellationToken cancellationToken);
 }

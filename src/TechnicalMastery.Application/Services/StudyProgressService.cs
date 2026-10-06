@@ -1,3 +1,4 @@
+using FluentValidation;
 using TechnicalMastery.Application.Common.Exceptions;
 using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
@@ -14,11 +15,16 @@ public class StudyProgressService : IStudyProgressService
 {
     private readonly IStudyProgressRepository progressEntries;
     private readonly IQuestionRepository questions;
+    private readonly IValidator<UpdateProgressRequest> statusValidator;
 
-    public StudyProgressService(IStudyProgressRepository progressEntries, IQuestionRepository questions)
+    public StudyProgressService(
+        IStudyProgressRepository progressEntries,
+        IQuestionRepository questions,
+        IValidator<UpdateProgressRequest> statusValidator)
     {
         this.progressEntries = progressEntries;
         this.questions = questions;
+        this.statusValidator = statusValidator;
     }
 
     public async Task<IReadOnlyList<StudyProgressDto>> GetAllAsync(CancellationToken cancellationToken)
@@ -133,5 +139,22 @@ public class StudyProgressService : IStudyProgressService
         {
             throw new NotFoundException("Question", questionId);
         }
+    }
+
+    public async Task<StudyProgressDto> SetStatusAsync(int questionId, UpdateProgressRequest request, CancellationToken cancellationToken)
+    {
+        await this.statusValidator.ValidateAndThrowAsync(request, cancellationToken);
+
+        if (request.Status == StudyStatus.Learning)
+        {
+            return await MarkViewedAsync(questionId, cancellationToken);
+        }
+
+        if (request.Status == StudyStatus.Completed)
+        {
+            return await MarkCompletedAsync(questionId, cancellationToken);
+        }
+
+        return await MarkNeedsReviewAsync(questionId, cancellationToken);
     }
 }

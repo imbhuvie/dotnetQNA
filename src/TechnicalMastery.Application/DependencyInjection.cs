@@ -1,6 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
+using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
 using TechnicalMastery.Application.Services;
+using TechnicalMastery.Application.Validators;
 
 namespace TechnicalMastery.Application;
 
@@ -13,6 +16,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        // Validators are registered explicitly (one line each) so the full
+        // validation set is visible here with no assembly scanning.
+        services.AddScoped<IValidator<QuestionsQuery>, QuestionsQueryValidator>();
+        services.AddScoped<IValidator<CreateNoteRequest>, CreateNoteRequestValidator>();
+        services.AddScoped<IValidator<UpdateNoteRequest>, UpdateNoteRequestValidator>();
+        services.AddScoped<IValidator<UpdateProgressRequest>, UpdateProgressRequestValidator>();
+
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ITopicService, TopicService>();
         services.AddScoped<IQuestionService, QuestionService>();

@@ -1,3 +1,4 @@
+using FluentValidation;
 using TechnicalMastery.Application.Common.Exceptions;
 using TechnicalMastery.Application.DTOs;
 using TechnicalMastery.Application.Interfaces;
@@ -13,11 +14,19 @@ public class NoteService : INoteService
 {
     private readonly INoteRepository notes;
     private readonly IQuestionRepository questions;
+    private readonly IValidator<CreateNoteRequest> createValidator;
+    private readonly IValidator<UpdateNoteRequest> updateValidator;
 
-    public NoteService(INoteRepository notes, IQuestionRepository questions)
+    public NoteService(
+        INoteRepository notes,
+        IQuestionRepository questions,
+        IValidator<CreateNoteRequest> createValidator,
+        IValidator<UpdateNoteRequest> updateValidator)
     {
         this.notes = notes;
         this.questions = questions;
+        this.createValidator = createValidator;
+        this.updateValidator = updateValidator;
     }
 
     public async Task<IReadOnlyList<QuestionNoteDto>> GetByQuestionAsync(int questionId, CancellationToken cancellationToken)
@@ -41,21 +50,17 @@ public class NoteService : INoteService
         return DtoMapper.ToDto(note);
     }
 
-    public async Task<QuestionNoteDto> CreateAsync(int questionId, string noteText, CancellationToken cancellationToken)
+    public async Task<QuestionNoteDto> CreateAsync(int questionId, CreateNoteRequest request, CancellationToken cancellationToken)
     {
+        await this.createValidator.ValidateAndThrowAsync(request, cancellationToken);
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
-
-        if (string.IsNullOrWhiteSpace(noteText))
-        {
-            throw new ArgumentException("Note text must not be empty.", nameof(noteText));
-        }
 
         DateTime now = DateTime.UtcNow;
 
         QuestionNote note = new QuestionNote
         {
             QuestionId = questionId,
-            NoteText = noteText.Trim(),
+            NoteText = request.NoteText.Trim(),
             CreatedAt = now,
             UpdatedAt = now
         };
@@ -65,8 +70,10 @@ public class NoteService : INoteService
         return DtoMapper.ToDto(note);
     }
 
-    public async Task<QuestionNoteDto> UpdateAsync(int id, string noteText, CancellationToken cancellationToken)
+    public async Task<QuestionNoteDto> UpdateAsync(int id, UpdateNoteRequest request, CancellationToken cancellationToken)
     {
+        await this.updateValidator.ValidateAndThrowAsync(request, cancellationToken);
+
         QuestionNote? note = await this.notes.GetByIdAsync(id, cancellationToken);
 
         if (note is null)
@@ -74,12 +81,7 @@ public class NoteService : INoteService
             throw new NotFoundException("Note", id);
         }
 
-        if (string.IsNullOrWhiteSpace(noteText))
-        {
-            throw new ArgumentException("Note text must not be empty.", nameof(noteText));
-        }
-
-        note.NoteText = noteText.Trim();
+        note.NoteText = request.NoteText.Trim();
         note.UpdatedAt = DateTime.UtcNow;
 
         await this.notes.UpdateAsync(note, cancellationToken);
