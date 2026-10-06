@@ -229,3 +229,15 @@
   responded 200`, EF command text in Development, handled-error warning for the 404.
 - `.gitignore`: `logs/` — diagnostics stay local.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 13 — Swagger / OpenAPI ✅ (2026-10-07)
+
+- Replaced the template's `Microsoft.AspNetCore.OpenApi` (built-in JSON only, no UI)
+  with `Swashbuckle.AspNetCore 10.2.3`: `AddSwaggerGen` (titled/versioned document with
+  a mobile-dev-facing description) + `UseSwagger`/`UseSwaggerUI` in Development.
+  Side benefit: the NU1903 `Microsoft.OpenApi` warning is gone — build is now 0 warnings.
+- `GenerateDocumentationFile` on Api (+ `NoWarn 1591`): the existing XML summaries on
+  every controller action flow into the document as endpoint descriptions (§29).
+- Live verification: `/swagger/v1/swagger.json` lists all 19 routes across the 7
+  controllers; `/swagger/index.html` returns 200.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

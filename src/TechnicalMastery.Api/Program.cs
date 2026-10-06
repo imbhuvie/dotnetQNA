@@ -25,8 +25,22 @@ builder.Services.AddApplication();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "DotNetTechnicalMastery API",
+        Version = "v1",
+        Description = "Backend for the .NET Technical Q&A Learning Platform. " +
+            "WPF today, mobile tomorrow — every endpoint below is the stable " +
+            "HTTP + JSON contract any client can consume."
+    });
+
+    string xmlFile = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+    string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
@@ -34,10 +48,11 @@ var app = builder.Build();
 // pipeline as a uniform ApiResponse envelope (never a stack trace).
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
+// Interactive API documentation for developers (including future mobile clients).
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 // Concise per-request line: method, path, status code, elapsed milliseconds.
