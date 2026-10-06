@@ -76,11 +76,10 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private async Task SearchAsync()
     {
-        await this.navigation.NavigateToAsync<BrowseViewModel>();
+        // Configure-before-initialize: the query is set before Browse loads,
+        // so the first load already applies it (server-side search, §14).
+        string query = SearchText;
 
-        if (this.navigation.CurrentViewModel is BrowseViewModel browse)
-        {
-            browse.SearchText = SearchText;
-        }
+        await this.navigation.NavigateToAsync<BrowseViewModel>(browse => browse.SearchText = query);
     }
 }

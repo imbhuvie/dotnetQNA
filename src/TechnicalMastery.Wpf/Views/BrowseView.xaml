@@ -25,6 +25,10 @@
             <TextBlock Text="Difficulty" FontWeight="Bold" />
             <ComboBox ItemsSource="{Binding Difficulties}" SelectedItem="{Binding SelectedDifficulty}"
                       Margin="0,4,0,12" />
+
+            <TextBlock Text="Sort by" FontWeight="Bold" />
+            <ComboBox ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSort}"
+                      Margin="0,4,0,12" />
             <Button Content="Apply filters" Command="{Binding FilterChangedCommand}" />
         </StackPanel>
 

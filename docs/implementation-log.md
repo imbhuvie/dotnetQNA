@@ -378,3 +378,11 @@
 - Fixed a malformed `DataTemplate` close in the tags block (build caught it).
 - Live check: app launches and stays alive with API serving.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 22 — Search & Sort ✅ (2026-10-07)
+
+- Header search now routes through configure-before-initialize, so Browse's first
+  server-side load already applies the query (previously the text landed after load).
+- Browse gains Sort options (Default/Newest/Oldest/Hardest/Easiest) mapped to the
+  API's `sortBy`/`descending` — full Search/Filter/Sort/Pagination coverage (§12).
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

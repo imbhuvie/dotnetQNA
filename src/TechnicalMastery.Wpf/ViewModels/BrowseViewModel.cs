@@ -57,6 +57,21 @@ public partial class BrowseViewModel : ViewModelBase
         DifficultyLevel.SystemDesign
     };
 
+    /// <summary>
+    /// Display labels mapped to API (sortBy, descending) in <see cref="LoadQuestionsAsync"/>.
+    /// </summary>
+    public List<string> SortOptions { get; } = new List<string>
+    {
+        "Default",
+        "Newest first",
+        "Oldest first",
+        "Hardest first",
+        "Easiest first"
+    };
+
+    [ObservableProperty]
+    private string selectedSort = "Default";
+
     public BrowseViewModel(ICatalogApiClient catalog, IQuestionApiClient questions, NavigationService navigation)
     {
         this.catalog = catalog;
@@ -118,8 +133,32 @@ public partial class BrowseViewModel : ViewModelBase
         await this.navigation.NavigateToAsync<QuestionDetailViewModel>(detail => detail.QuestionId = question.Id);
     }
 
-    private async Task LoadCatalogAsync()
+    private static (string? SortBy, bool Descending) MapSort(string selected)
     {
+        if (selected == "Newest first")
+        {
+            return ("newest", true);
+        }
+
+        if (selected == "Oldest first")
+        {
+            return ("newest", false);
+        }
+
+        if (selected == "Hardest first")
+        {
+            return ("difficulty", true);
+        }
+
+        if (selected == "Easiest first")
+        {
+            return ("difficulty", false);
+        }
+
+        return (null, false);
+    }
+
+    private async Task LoadCatalogAsync()    {
         try
         {
             IReadOnlyList<CategoryModel> categories = await this.catalog.GetCategoriesAsync(CancellationToken.None);
@@ -168,10 +207,12 @@ public partial class BrowseViewModel : ViewModelBase
 
         try
         {
+            (string? sortBy, bool descending) = MapSort(SelectedSort);
+
             PagedResult<QuestionSummaryModel> result = await this.questions.GetPagedAsync(
                 page, PageSize, SelectedCategory?.Id, SelectedTopic?.Id, SelectedDifficulty,
                 string.IsNullOrWhiteSpace(SearchText) ? null : SearchText.Trim(),
-                null, false, CancellationToken.None);
+                sortBy, descending, CancellationToken.None);
 
             Page = result.Page;
             TotalPages = result.TotalPages;
