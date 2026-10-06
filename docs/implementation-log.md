@@ -161,3 +161,23 @@
 - New `IDashboardService`/`DashboardService`: totals, remaining, bookmark/needs-review
   counts, per-category rows ordered by category; registered in `AddApplication`.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 9 — API Controllers ✅ (2026-10-07)
+
+- 7 thin controllers (services do the work; actions wrap `ApiResponse<T>.Ok`):
+  `Categories` (list/get), `Topics` (list with optional `?categoryId=`/get),
+  `Questions` (paged list via `QuestionsQuery`, `search`, `random`, `category/{id}`,
+  `topic/{id}`, `difficulty/{level}`, `{id}`, `{id}/related`), `Bookmarks`
+  (list/add→201/remove), `Progress` (list/set-status→routes Learning/Completed/
+  NeedsReview), `Notes` (by-question/get/create→201/update/delete), `Dashboard`
+  (`summary`). `{id:int}` constraints prevent `search`/`random` route collisions.
+- `Program.cs`: enums serialize as strings (`"difficultyLevel": "Intermediate"`) for
+  human-friendly WPF/mobile clients.
+- Route note: `POST /api/progress/{questionId}` (+ body `{status}`) instead of the
+  spec's bare `POST /api/progress` — question identity belongs in the route; the same
+  operation, cleaner REST. Same for notes (`POST /api/notes/question/{questionId}`).
+- Smoke test (empty DB, pre-seeding): `/api/categories`, `/api/dashboard/summary`,
+  `/api/questions?page=1&pageSize=5` all return `success:true` with the exact envelope
+  shape and camelCase JSON. 404 paths still bubble as 500 until Phase 11 middleware —
+  expected, fixed next.
+- Verified: full-solution `dotnet build` — 0 errors.
