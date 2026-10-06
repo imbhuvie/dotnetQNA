@@ -1,4 +1,5 @@
 using TechnicalMastery.Domain.Entities;
+using TechnicalMastery.Domain.Enums;
 
 namespace TechnicalMastery.Application.Interfaces;
 
@@ -12,4 +13,6 @@ public interface IStudyProgressRepository
     Task<StudyProgress?> GetByQuestionIdAsync(int questionId, CancellationToken cancellationToken);
 
     Task UpsertAsync(StudyProgress progress, CancellationToken cancellationToken);
+
+    Task<int> CountByStatusAsync(StudyStatus status, CancellationToken cancellationToken);
 }

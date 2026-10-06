@@ -38,4 +38,10 @@ public interface IQuestionRepository
     Task<int> CountAsync(CancellationToken cancellationToken);
 
     Task<bool> ExistsAsync(int id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Per-category totals plus completed counts for the dashboard.
+    /// Projection is translated to SQL; grouping happens in memory.
+    /// </summary>
+    Task<IReadOnlyList<(int CategoryId, int Total, int Completed)>> GetCategoryStatsAsync(CancellationToken cancellationToken);
 }

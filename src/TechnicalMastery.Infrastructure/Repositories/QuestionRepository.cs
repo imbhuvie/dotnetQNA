@@ -164,6 +164,27 @@ public class QuestionRepository : IQuestionRepository
         return this.context.Questions.AnyAsync(question => question.Id == id, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<(int CategoryId, int Total, int Completed)>> GetCategoryStatsAsync(CancellationToken cancellationToken)
+    {
+        var rows = await this.context.Questions
+            .AsNoTracking()
+            .Where(question => question.IsActive)
+            .Select(question => new
+            {
+                CategoryId = question.Topic.CategoryId,
+                Completed = question.Progress != null && question.Progress.Status == StudyStatus.Completed
+            })
+            .ToListAsync(cancellationToken);
+
+        List<(int CategoryId, int Total, int Completed)> stats = rows
+            .GroupBy(row => row.CategoryId)
+            .Select(group => (group.Key, group.Count(), group.Count(row => row.Completed)))
+            .OrderBy(stat => stat.Item1)
+            .ToList();
+
+        return stats;
+    }
+
     private static IQueryable<Question> ApplyOrdering(IQueryable<Question> query, string? sortBy, bool descending)
     {
         string key = (sortBy ?? "id").Trim().ToLowerInvariant();

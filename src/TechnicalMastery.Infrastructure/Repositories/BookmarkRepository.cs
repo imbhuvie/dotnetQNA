@@ -54,4 +54,9 @@ public class BookmarkRepository : IBookmarkRepository
 
         return true;
     }
+
+    public Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return this.context.Bookmarks.CountAsync(cancellationToken);
+    }
 }

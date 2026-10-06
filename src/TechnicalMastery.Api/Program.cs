@@ -1,3 +1,4 @@
+using TechnicalMastery.Application;
 using TechnicalMastery.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is missing.");
 
 builder.Services.AddInfrastructure(connectionString);
+builder.Services.AddApplication();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

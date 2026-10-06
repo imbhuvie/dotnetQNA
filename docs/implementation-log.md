@@ -119,3 +119,26 @@
   with safe fallback.
 - `DependencyInjection.AddInfrastructure` now registers all six repositories as scoped.
 - Verified: full-solution `dotnet build` — 0 errors.
+
+## Phase 7 — Application Services ✅ (2026-10-07)
+
+- `Application/Common/Exceptions/`: `NotFoundException(entity, key)` → future HTTP 404,
+  `ConflictException(message)` → future HTTP 409. Global middleware translates them in Phase 11.
+- 6 service interfaces + implementations in `Application/Interfaces/` + `Application/Services/`
+  (services return Domain entities for now; Phase 8 DTOs adapt the return shapes):
+  - `CategoryService` / `TopicService` — reads with NotFound guards (topics validate the category).
+  - `QuestionService` — detail/paged/random/related/count; validates category/topic filters
+    before querying (bad filter → 404, not empty list).
+  - `BookmarkService` — question must exist; double-bookmark → Conflict; removing absent → NotFound.
+  - `StudyProgressService` — `MarkViewed` (creates Learning / stamps LastViewedAt),
+    `MarkCompleted` (stamps CompletedAt), `MarkNeedsReview` (increments ReviewCount);
+    all validate the question and work whether or not an entry exists yet.
+  - `NoteService` — CRUD with question-existence checks, empty-text rejection (trims),
+    automatic CreatedAt/UpdatedAt.
+- Small Phase 6 follow-ups for dashboard counts: `IBookmarkRepository.CountAsync`,
+  `IStudyProgressRepository.CountByStatusAsync`, `IQuestionRepository.GetCategoryStatsAsync`
+  (SQL-translatable projection, in-memory grouping — avoids risky conditional-join translation).
+- `Application/DependencyInjection.cs`: `AddApplication()` registers all six services
+  (new `Microsoft.Extensions.DependencyInjection.Abstractions 10.0.12` reference);
+  `Api/Program.cs` calls it. Controllers will depend on `I*Service` only (Rule 7).
+- Verified: full-solution `dotnet build` — 0 errors.

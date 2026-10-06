@@ -14,4 +14,6 @@ public interface IBookmarkRepository
     Task AddAsync(Bookmark bookmark, CancellationToken cancellationToken);
 
     Task<bool> RemoveAsync(int questionId, CancellationToken cancellationToken);
+
+    Task<int> CountAsync(CancellationToken cancellationToken);
 }

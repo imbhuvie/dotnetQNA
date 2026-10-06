@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TechnicalMastery.Application.Interfaces;
 using TechnicalMastery.Domain.Entities;
+using TechnicalMastery.Domain.Enums;
 using TechnicalMastery.Infrastructure.Data;
 
 namespace TechnicalMastery.Infrastructure.Repositories;
@@ -51,5 +52,10 @@ public class StudyProgressRepository : IStudyProgressRepository
         }
 
         await this.context.SaveChangesAsync(cancellationToken);
+    }
+
+    public Task<int> CountByStatusAsync(StudyStatus status, CancellationToken cancellationToken)
+    {
+        return this.context.StudyProgressEntries.CountAsync(progress => progress.Status == status, cancellationToken);
     }
 }
