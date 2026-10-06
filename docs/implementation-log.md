@@ -338,3 +338,15 @@
   mappings. New package: `Microsoft.Extensions.Http` (`AddHttpClient` lives there,
   not in Hosting — build caught it).
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 19 — Dashboard ✅ (2026-10-07)
+
+- `DashboardViewModel`: loads `IDashboardApiClient` summary in `InitializeAsync`
+  (busy flag, friendly errors via `ApiException.UserMessage`); `ContinueLearning`
+  navigates to Browse (deep-link to a random question's detail arrives with Phase 21).
+- `DashboardView`: 5 stat cards, per-category `ProgressBar` rows with counts/percents,
+  loading + error states, scrollable responsive layout.
+- `Converters/`: `NullToVisibility` + `BoolToVisibility`, registered app-wide.
+- Live check: API reseeded (30 questions), WPF exe launched and stayed alive through
+  startup/navigation/dashboard load with no crash; API serving alongside.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
