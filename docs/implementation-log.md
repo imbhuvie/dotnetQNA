@@ -542,3 +542,11 @@ All 10 rules (§38) verified, not just asserted:
   SequenceEqual validation, join performance, distinct paging, ranking/windows).
 - Live verification: 110 total, 40 in LINQ.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 05e — LINQ part 5 ✅ (120 total, category complete)
+
+- `questions/05-linq-5.json` (10: N+1 detection/fix, compiled queries, split queries,
+  async streaming, dynamic filters, plan caching, distributed sorting, LINQ testing,
+  temporal joins, pipeline observability).
+- Live verification: 120 total, 50 in LINQ — second category complete.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
