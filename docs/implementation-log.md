@@ -491,3 +491,11 @@ All 10 rules (§38) verified, not just asserted:
   category prefixes consistent.
 - Live verification: 50 total, 20 in Collections.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 04c — Collections part 3 ✅ (60 total)
+
+- `questions/04-collections-3.json` (10: IEnumerable/yield mechanics, Collection<T>
+  vs List<T> inheritance, AsReadOnly vs snapshots, immutable collections, Frozen
+  collections, sorted variants, ArrayPool, LOH avoidance, capacity planning, LRU design).
+- Live verification: 60 total, 30 in Collections.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
