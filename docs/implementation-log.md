@@ -550,3 +550,11 @@ All 10 rules (§38) verified, not just asserted:
   temporal joins, pipeline observability).
 - Live verification: 120 total, 50 in LINQ — second category complete.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 06a — .NET part 1 ✅ (130 total)
+
+- `questions/06-dotnet-1.json` (10: CLR/JIT, assemblies, SDK vs runtime, config
+  layering, options lifetimes, reload pitfalls, log levels, structured logging,
+  AOT vs ReadyToRun, secrets management). Tracker .NET row split into 06a–06d.
+- Live verification: 130 total, 10 in .NET.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

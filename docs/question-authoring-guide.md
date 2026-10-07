@@ -98,7 +98,10 @@ commits so history stays reviewable. Never commit `*.db` (gitignored).
 | 05c | `05-linq-4.json` | LINQ (joins, sets) | 10 | ✅ Done |
 | 05d | `05-linq-3.json` | LINQ (execution semantics) | 10 | ✅ Done |
 | 05e | `05-linq-5.json` | LINQ (production scenarios) | 10 | ✅ Done |
-| 06 | `06-dotnet.json` | .NET | 40 | ⬜ |
+| 06a | `06-dotnet-1.json` | .NET (runtime, configuration) | 10 | ✅ Done |
+| 06b | `06-dotnet-2.json` | .NET (DI container, logging) | 10 | ⬜ |
+| 06c | `06-dotnet-3.json` | .NET (hosting, backgrounds) | 10 | ⬜ |
+| 06d | `06-dotnet-4.json` | .NET (production scenarios) | 10 | ⬜ |
 | 07 | `07-dependency-injection.json` | Dependency Injection | 40 | ⬜ |
 | 08 | `08-aspnetcore.json` | ASP.NET Core | 60 | ⬜ |
 | 09 | `09-webapi.json` | Web API | 50 | ⬜ |
