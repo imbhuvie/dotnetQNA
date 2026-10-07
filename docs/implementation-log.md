@@ -508,3 +508,12 @@ All 10 rules (§38) verified, not just asserted:
   object pooling).
 - Live verification: 70 total, 40 in Collections — first category complete.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 05a — LINQ part 1 ✅ (80 total)
+
+- `questions/05-linq-1.json` (10: Where/Select chaining, SelectMany flattening, DTO
+  projection with EF, OrderBy/ThenBy/comparers, GroupBy + Having, First/Single/Find,
+  Any/All/Count costs, Sum/Average/Min/Max empties, Take/Skip/Chunk, query vs method
+  syntax). Tracker LINQ row split into 05a–05e.
+- Live verification: 80 total, 10 in LINQ.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

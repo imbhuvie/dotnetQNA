@@ -93,7 +93,11 @@ commits so history stays reviewable. Never commit `*.db` (gitignored).
 | 04b | `04-collections-2.json` | Collections (queues, concurrent) | 10 | ✅ Done |
 | 04c | `04-collections-3.json` | Collections (enumerables, spans) | 10 | ✅ Done |
 | 04d | `04-collections-4.json` | Collections (production scenarios) | 10 | ✅ Done |
-| 05 | `05-linq.json` | LINQ | 50 | ⬜ |
+| 05a | `05-linq-1.json` | LINQ (filtering, projection) | 10 | ✅ Done |
+| 05b | `05-linq-2.json` | LINQ (ordering, grouping) | 10 | ⬜ |
+| 05c | `05-linq-3.json` | LINQ (joins, sets) | 10 | ⬜ |
+| 05d | `05-linq-4.json` | LINQ (execution semantics) | 10 | ⬜ |
+| 05e | `05-linq-5.json` | LINQ (production scenarios) | 10 | ⬜ |
 | 06 | `06-dotnet.json` | .NET | 40 | ⬜ |
 | 07 | `07-dependency-injection.json` | Dependency Injection | 40 | ⬜ |
 | 08 | `08-aspnetcore.json` | ASP.NET Core | 60 | ⬜ |
