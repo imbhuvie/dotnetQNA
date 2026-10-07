@@ -38,9 +38,9 @@
                                                 <TextBlock Text="{Binding Status}" Foreground="White" FontSize="12" FontWeight="Bold" />
                                             </Border>
                                             <TextBlock Opacity="0.7">
-                                                <Run Text="Last viewed: " /><Run Text="{Binding LastViewedAt, Converter={StaticResource DateTimeToStringConverter}}" />
-                                                <Run Text="  " /><Run Text="Completed: " /><Run Text="{Binding CompletedAt, Converter={StaticResource NullableDateTimeToStringConverter}}" />
-                                                <Run Text="  " /><Run Text="Reviews: " /><Run Text="{Binding ReviewCount}" />
+                                                <Run Text="Last viewed: " /><Run Text="{Binding LastViewedAt, Converter={StaticResource DateTimeToStringConverter}, Mode=OneWay}" />
+                                                <Run Text="  " /><Run Text="Completed: " /><Run Text="{Binding CompletedAt, Converter={StaticResource NullableDateTimeToStringConverter}, Mode=OneWay}" />
+                                                <Run Text="  " /><Run Text="Reviews: " /><Run Text="{Binding ReviewCount, Mode=OneWay}" />
                                             </TextBlock>
                                         </StackPanel>
                                     </StackPanel>

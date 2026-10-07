@@ -64,9 +64,9 @@
                             <StackPanel>
                                 <TextBlock Text="{Binding QuestionText}" FontWeight="Bold" TextWrapping="Wrap" />
                                 <TextBlock Opacity="0.7" TextWrapping="Wrap">
-                                    <Run Text="{Binding CategoryName}" /><Run Text=" / " /><Run Text="{Binding TopicName}" />
-                                    <Run Text="  •  " /><Run Text="{Binding DifficultyLevel}" />
-                                    <Run Text="  •  " /><Run Text="{Binding Status}" />
+                                    <Run Text="{Binding CategoryName, Mode=OneWay}" /><Run Text=" / " /><Run Text="{Binding TopicName, Mode=OneWay}" />
+                                    <Run Text="  •  " /><Run Text="{Binding DifficultyLevel, Mode=OneWay}" />
+                                    <Run Text="  •  " /><Run Text="{Binding Status, Mode=OneWay}" />
                                 </TextBlock>
                             </StackPanel>
                         </Button>
@@ -77,8 +77,8 @@
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
                 <Button Content="‹ Previous" Command="{Binding PreviousPageCommand}" Padding="12,4" Margin="0,0,8,0" />
                 <TextBlock VerticalAlignment="Center">
-                    <Run Text="Page " /><Run Text="{Binding Page}" /><Run Text=" of " /><Run Text="{Binding TotalPages}" />
-                    <Run Text=" (" /><Run Text="{Binding TotalCount}" /><Run Text=" questions)" />
+                    <Run Text="Page " /><Run Text="{Binding Page, Mode=OneWay}" /><Run Text=" of " /><Run Text="{Binding TotalPages, Mode=OneWay}" />
+                    <Run Text=" (" /><Run Text="{Binding TotalCount, Mode=OneWay}" /><Run Text=" questions)" />
                 </TextBlock>
                 <Button Content="Next ›" Command="{Binding NextPageCommand}" Padding="12,4" Margin="8,0,0,0" />
             </StackPanel>

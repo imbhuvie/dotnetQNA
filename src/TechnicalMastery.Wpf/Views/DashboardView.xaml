@@ -61,8 +61,8 @@
                             <ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding PercentComplete}"
                                          Height="14" Margin="8,0" VerticalAlignment="Center" />
                             <TextBlock Grid.Column="2" VerticalAlignment="Center">
-                                <Run Text="{Binding Completed}" /><Run Text="/" /><Run Text="{Binding Total}" />
-                                <Run Text="(" /><Run Text="{Binding PercentComplete}" /><Run Text="%)" />
+                                <Run Text="{Binding Completed, Mode=OneWay}" /><Run Text="/" /><Run Text="{Binding Total, Mode=OneWay}" />
+                                <Run Text="(" /><Run Text="{Binding PercentComplete, Mode=OneWay}" /><Run Text="%)" />
                             </TextBlock>
                         </Grid>
                     </DataTemplate>

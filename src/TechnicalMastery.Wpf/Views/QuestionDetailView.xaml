@@ -11,10 +11,10 @@
 
             <StackPanel Visibility="{Binding Detail, Converter={StaticResource NullToVisibilityConverter}}">
                 <TextBlock FontSize="12" Opacity="0.7">
-                    <Run Text="Question #" /><Run Text="{Binding Detail.Id}" />
-                    <Run Text="  •  " /><Run Text="{Binding Detail.CategoryName}" />
-                    <Run Text=" / " /><Run Text="{Binding Detail.TopicName}" />
-                    <Run Text="  •  " /><Run Text="{Binding Detail.DifficultyLevel}" />
+                    <Run Text="Question #" /><Run Text="{Binding Detail.Id, Mode=OneWay}" />
+                    <Run Text="  •  " /><Run Text="{Binding Detail.CategoryName, Mode=OneWay}" />
+                    <Run Text=" / " /><Run Text="{Binding Detail.TopicName, Mode=OneWay}" />
+                    <Run Text="  •  " /><Run Text="{Binding Detail.DifficultyLevel, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock Text="{Binding Detail.QuestionText}" FontSize="20" FontWeight="Bold"
                            TextWrapping="Wrap" Margin="0,4,0,12" />
@@ -74,8 +74,8 @@
                     <Button Content="Next ›" Command="{Binding NextCommand}" Padding="12,6" Margin="0,0,8,8" />
                 </WrapPanel>
                 <TextBlock Opacity="0.7" Margin="0,0,0,8">
-                    <Run Text="Bookmarked: " /><Run Text="{Binding Detail.IsBookmarked}" />
-                    <Run Text="   Status: " /><Run Text="{Binding Detail.Status}" />
+                    <Run Text="Bookmarked: " /><Run Text="{Binding Detail.IsBookmarked, Mode=OneWay}" />
+                    <Run Text="   Status: " /><Run Text="{Binding Detail.Status, Mode=OneWay}" />
                 </TextBlock>
 
                 <TextBlock Text="RELATED QUESTIONS" FontWeight="Bold" Margin="0,12,0,4" />

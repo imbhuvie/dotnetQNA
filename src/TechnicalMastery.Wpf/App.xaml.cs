@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Text;
 using System.Windows;
+using System.Windows.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +22,13 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // §20 on the client: no silent process deaths. UI-thread faults show a
+        // friendly message and are logged with full stacks (including inners);
+        // the app survives. Non-UI faults are logged before exit.
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
@@ -55,8 +64,6 @@ public partial class App : Application
         builder.Services.AddTransient<BookmarksViewModel>();
         builder.Services.AddTransient<ProgressViewModel>();
         builder.Services.AddTransient<QuestionDetailViewModel>();
-        builder.Services.AddTransient<BookmarksViewModel>();
-        builder.Services.AddTransient<ProgressViewModel>();
         builder.Services.AddTransient<NotesViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<AboutViewModel>();
@@ -78,5 +85,60 @@ public partial class App : Application
         }
 
         base.OnExit(e);
+    }
+
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        LogCrash(e.Exception);
+
+        MessageBox.Show(
+            "Something went wrong, but the app is still running.\n\nDetails were written to the logs folder.",
+            ".NET Technical Mastery",
+            MessageBoxButton.OK,
+            MessageBoxImage.Warning);
+
+        e.Handled = true;
+    }
+
+    private void OnDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception exception)
+        {
+            LogCrash(exception);
+        }
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        LogCrash(e.Exception);
+        e.SetObserved();
+    }
+
+    private static void LogCrash(Exception exception)
+    {
+        try
+        {
+            string directory = Path.Combine(AppContext.BaseDirectory, "logs");
+            Directory.CreateDirectory(directory);
+
+            string path = Path.Combine(directory, "wpf-" + DateTime.Now.ToString("yyyyMMdd") + ".txt");
+
+            StringBuilder text = new StringBuilder();
+            text.AppendLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Unhandled exception:");
+
+            Exception? current = exception;
+            while (current is not null)
+            {
+                text.AppendLine(current.GetType().FullName + ": " + current.Message);
+                text.AppendLine(current.StackTrace);
+                current = current.InnerException;
+            }
+
+            File.AppendAllText(path, text.ToString());
+        }
+        catch (IOException)
+        {
+            // Logging must never crash the app a second time.
+        }
     }
 }
