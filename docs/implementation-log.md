@@ -534,3 +534,11 @@ All 10 rules (§38) verified, not just asserted:
   Tracker rows reordered to match files (05d done; joins/sets moves to 05-linq-4).
 - Live verification: 100 total, 30 in LINQ — first century milestone.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 05d — LINQ part 4 ✅ (110 total)
+
+- `questions/05-linq-4.json` (10: inner-join syntaxes, composite keys, self-joins,
+  full/right joins, Union/Concat/Intersect/Except, case-insensitive joins,
+  SequenceEqual validation, join performance, distinct paging, ranking/windows).
+- Live verification: 110 total, 40 in LINQ.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
