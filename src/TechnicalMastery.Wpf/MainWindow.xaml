@@ -4,7 +4,9 @@
         xmlns:vm="clr-namespace:TechnicalMastery.Wpf.ViewModels"
         xmlns:views="clr-namespace:TechnicalMastery.Wpf.Views"
         Title=".NET Technical Mastery" Height="700" Width="1100"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Foreground="{DynamicResource AppForegroundBrush}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <views:DashboardView />
@@ -39,10 +41,10 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar navigation: buttons bound to commands, no click handlers. -->
-        <StackPanel Grid.Column="0" Background="#1E1E2E">
-            <TextBlock Text=".NET Mastery" Foreground="White" FontSize="18" FontWeight="Bold"
+        <StackPanel Grid.Column="0" Background="{DynamicResource SidebarBackgroundBrush}">
+            <TextBlock Text=".NET Mastery" Foreground="{DynamicResource SidebarForegroundBrush}" FontSize="18" FontWeight="Bold"
                        Margin="16,16,16,8" />
-            <TextBlock Text="Technical Q&amp;A" Foreground="#8B8B9E" FontSize="12"
+            <TextBlock Text="Technical Q&amp;A" Foreground="{DynamicResource SidebarForegroundBrush}" Opacity="0.6" FontSize="12"
                        Margin="16,0,16,16" />
             <Button Content="Dashboard" Command="{Binding NavigateToDashboardCommand}" Margin="8,2" Padding="8,6" />
             <Button Content="Browse" Command="{Binding NavigateToBrowseCommand}" Margin="8,2" Padding="8,6" />

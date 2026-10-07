@@ -47,6 +47,7 @@ public partial class App : Application
 
         // View/view-model registrations arrive in Phase 17+.
         builder.Services.AddSingleton<NavigationService>();
+        builder.Services.AddSingleton<ThemeService>();
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<MainWindow>();
         builder.Services.AddTransient<DashboardViewModel>();

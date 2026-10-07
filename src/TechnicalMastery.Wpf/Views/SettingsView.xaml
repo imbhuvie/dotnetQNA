@@ -1,5 +1,19 @@
 <UserControl x:Class="TechnicalMastery.Wpf.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <TextBlock Text="Settings" FontSize="24" Margin="16" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" MaxWidth="700">
+            <TextBlock Text="Settings" FontSize="26" FontWeight="Bold" />
+            <TextBlock Text="Appearance and connection" FontSize="14" Opacity="0.7" Margin="0,0,0,16" />
+
+            <TextBlock Text="APPEARANCE" FontWeight="Bold" Margin="0,0,0,4" />
+            <CheckBox Content="Dark theme" IsChecked="{Binding IsDarkTheme}"
+                      Command="{Binding ToggleThemeCommand}" Margin="0,0,0,16" />
+
+            <TextBlock Text="BACKEND CONNECTION" FontWeight="Bold" Margin="0,0,0,4" />
+            <TextBlock Text="API base URL (from appsettings.json):" Opacity="0.7" />
+            <TextBox Text="{Binding ApiBaseUrl, Mode=OneWay}" IsReadOnly="True"
+                     FontFamily="Consolas" Padding="8,4" Margin="0,4,0,0" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

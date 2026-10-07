@@ -28,7 +28,7 @@
                 <TextBlock Text="EXAMPLE" FontWeight="Bold" Margin="0,12,0,2"
                            Visibility="{Binding Detail.CodeExample, Converter={StaticResource NullToVisibilityConverter}}" />
                 <TextBox Text="{Binding Detail.CodeExample, Mode=OneWay}" IsReadOnly="True"
-                         FontFamily="Consolas" FontSize="13" Background="#1E1E2E" Foreground="#DCDCAA"
+                         FontFamily="Consolas" FontSize="13" Background="{DynamicResource CodeBackgroundBrush}" Foreground="{DynamicResource CodeForegroundBrush}"
                          Padding="8" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="0"
                          Visibility="{Binding Detail.CodeExample, Converter={StaticResource NullToVisibilityConverter}}" />
 
@@ -59,7 +59,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#E8E8F0" CornerRadius="10" Padding="8,2" Margin="0,0,6,4">
+                            <Border Background="{DynamicResource TagBackgroundBrush}" CornerRadius="10" Padding="8,2" Margin="0,0,6,4">
                                 <TextBlock Text="{Binding}" FontSize="12" />
                             </Border>
                         </DataTemplate>

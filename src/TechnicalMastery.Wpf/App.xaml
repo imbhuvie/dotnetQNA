@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:TechnicalMastery.Wpf.Converters">
     <Application.Resources>
-        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
-        <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter" />
-        <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
-        <converters:NullableDateTimeToStringConverter x:Key="NullableDateTimeToStringConverter" />
-        <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/LightTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+            <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter" />
+            <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+            <converters:NullableDateTimeToStringConverter x:Key="NullableDateTimeToStringConverter" />
+            <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

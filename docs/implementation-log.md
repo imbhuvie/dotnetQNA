@@ -422,3 +422,16 @@
   shared edit panel + empty state.
 - Live check: created note via API, `GET /api/notes` returns it; app launches alive.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 26 — Polish + Themes ✅ (2026-10-07)
+
+- `Resources/LightTheme.xaml` + `DarkTheme.xaml`: 10 named color/brush pairs each
+  (background, foreground, borders, muted text, accent, code block, sidebar, tags).
+- `Services/ThemeService`: swaps the merged dictionary at runtime; views use
+  `{DynamicResource}` so they update instantly. Hardcoded sidebar/code/tag colors
+  converted; window background/foreground themed.
+- `SettingsViewModel`/view: dark-theme CheckBox toggle + read-only API base URL
+  from config (§31). `AboutViewModel`/view: title, version, description, architecture note.
+- Build validates both dictionaries (XAML compiler resolves all brush keys).
+- Live check: app launches alive on the default light theme with API serving.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
