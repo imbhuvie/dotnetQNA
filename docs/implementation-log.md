@@ -601,3 +601,12 @@ All 10 rules (§38) verified, not just asserted:
   in workers, K8s probes YAML, Windows/systemd hosting, zero-downtime deploys).
 - Live verification: 150 total, 30 in .NET.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 06d — .NET part 4 ✅ (160 total, category complete)
+
+- `questions/06-dotnet-4.json` (10: GC latency modes, dotnet diagnostics trio,
+  deadlock dump analysis, deployment models, AppContext switches, TimeProvider,
+  log-trace-metric correlation, Random vs CSPRNG, source-generated logging/regex,
+  Scrutor decorators).
+- Live verification: 160 total, 40 in .NET — third category complete.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
