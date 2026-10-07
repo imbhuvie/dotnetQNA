@@ -517,3 +517,11 @@ All 10 rules (§38) verified, not just asserted:
   syntax). Tracker LINQ row split into 05a–05e.
 - Live verification: 80 total, 10 in LINQ.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 05b — LINQ part 2 ✅ (90 total)
+
+- `questions/05-linq-2.json` (10: Join/GroupJoin, left-outer-join pattern, By-key
+  set ops, Zip/cross joins, MinBy/MaxBy, ToDictionary/ToLookup failure modes,
+  Aggregate folds, dataset reconciliation, OfType/Cast, stable grouped paging).
+- Live verification: 90 total, 20 in LINQ.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
