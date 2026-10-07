@@ -525,3 +525,12 @@ All 10 rules (§38) verified, not just asserted:
   Aggregate folds, dataset reconciliation, OfType/Cast, stable grouped paging).
 - Live verification: 90 total, 20 in LINQ.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 05c — LINQ part 3 ✅ (100 total)
+
+- `questions/05-linq-3.json` (10: deferred vs immediate, streaming vs buffering,
+  IEnumerable vs IQueryable, multiple-enumeration hazards, closure capture, ToList
+  timing, EF translation failures, custom operators, PLINQ, pipeline debugging).
+  Tracker rows reordered to match files (05d done; joins/sets moves to 05-linq-4).
+- Live verification: 100 total, 30 in LINQ — first century milestone.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
