@@ -90,7 +90,7 @@ commits so history stays reviewable. Never commit `*.db` (gitignored).
 | 02 | `02-csharp-advanced.json` | C# Advanced | 10 | ✅ Done |
 | 03 | `03-oop.json` | OOP | 10 | ✅ Done |
 | 04a | `04-collections-1.json` | Collections (lists, dictionaries) | 10 | ✅ Done |
-| 04b | `04-collections-2.json` | Collections (queues, concurrent) | 10 | ⬜ |
+| 04b | `04-collections-2.json` | Collections (queues, concurrent) | 10 | ✅ Done |
 | 04c | `04-collections-3.json` | Collections (enumerables, spans) | 10 | ⬜ |
 | 04d | `04-collections-4.json` | Collections (production scenarios) | 10 | ⬜ |
 | 05 | `05-linq.json` | LINQ | 50 | ⬜ |

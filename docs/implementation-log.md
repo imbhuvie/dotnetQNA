@@ -481,3 +481,13 @@ All 10 rules (§38) verified, not just asserted:
   API surface types). Tracker split into 04a–04d part rows (same 40 total).
 - Live verification: 40 total, 10 in Collections, detail + tags correct.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 04b — Collections part 2 ✅ (50 total)
+
+- `questions/04-collections-2.json` (10: Queue/Stack basics, List-as-queue antipattern,
+  PriorityQueue, bracket validation, bounded-buffer design, ConcurrentDictionary
+  factories, concurrent queue/stack/bag, BlockingCollection vs Channel, Interlocked
+  vs lock, false sharing). File initially misnumbered `05-`; renamed to keep
+  category prefixes consistent.
+- Live verification: 50 total, 20 in Collections.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
