@@ -92,7 +92,7 @@ commits so history stays reviewable. Never commit `*.db` (gitignored).
 | 04a | `04-collections-1.json` | Collections (lists, dictionaries) | 10 | ✅ Done |
 | 04b | `04-collections-2.json` | Collections (queues, concurrent) | 10 | ✅ Done |
 | 04c | `04-collections-3.json` | Collections (enumerables, spans) | 10 | ✅ Done |
-| 04d | `04-collections-4.json` | Collections (production scenarios) | 10 | ⬜ |
+| 04d | `04-collections-4.json` | Collections (production scenarios) | 10 | ✅ Done |
 | 05 | `05-linq.json` | LINQ | 50 | ⬜ |
 | 06 | `06-dotnet.json` | .NET | 40 | ⬜ |
 | 07 | `07-dependency-injection.json` | Dependency Injection | 40 | ⬜ |

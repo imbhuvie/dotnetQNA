@@ -499,3 +499,12 @@ All 10 rules (§38) verified, not just asserted:
   collections, sorted variants, ArrayPool, LOH avoidance, capacity planning, LRU design).
 - Live verification: 60 total, 30 in Collections.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 04d — Collections part 4 ✅ (70 total, category complete)
+
+- `questions/04-collections-4.json` (10: collection decision guide, cross-thread
+  iteration patterns, comparer production bugs, leak diagnosis, paging/chunking,
+  MemoryCache, batched DB writes, JSON gotchas, sliding-window rate limiting,
+  object pooling).
+- Live verification: 70 total, 40 in Collections — first category complete.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
