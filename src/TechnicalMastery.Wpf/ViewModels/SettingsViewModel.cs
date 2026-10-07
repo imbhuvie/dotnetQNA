@@ -1,6 +1,6 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 using Microsoft.Extensions.Configuration;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Services;
 
 namespace TechnicalMastery.Wpf.ViewModels;
@@ -8,11 +8,10 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// <summary>
 /// Settings screen: theme toggle and the configured API address (§31).
 /// </summary>
-public partial class SettingsViewModel : ViewModelBase
+public class SettingsViewModel : ViewModelBase
 {
     private readonly ThemeService theme;
 
-    [ObservableProperty]
     private bool isDarkTheme;
 
     public string ApiBaseUrl { get; }
@@ -22,9 +21,18 @@ public partial class SettingsViewModel : ViewModelBase
         this.theme = theme;
         ApiBaseUrl = configuration["Api:BaseUrl"] ?? "(not configured)";
         IsDarkTheme = theme.IsDark;
+
+        ToggleThemeCommand = new RelayCommand(ToggleTheme);
     }
 
-    [RelayCommand]
+    public bool IsDarkTheme
+    {
+        get { return this.isDarkTheme; }
+        set { SetProperty(ref this.isDarkTheme, value); }
+    }
+
+    public ICommand ToggleThemeCommand { get; }
+
     private void ToggleTheme()
     {
         this.theme.ApplyTheme(IsDarkTheme);

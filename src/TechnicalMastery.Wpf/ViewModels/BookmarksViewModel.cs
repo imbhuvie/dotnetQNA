@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -10,7 +10,7 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// Bookmarks screen (§15): list of bookmarked questions with navigation to
 /// detail and remove action. Loads on navigation via InitializeAsync.
 /// </summary>
-public partial class BookmarksViewModel : ViewModelBase
+public class BookmarksViewModel : ViewModelBase
 {
     private readonly IBookmarkApiClient bookmarks;
     private readonly NavigationService navigation;
@@ -21,7 +21,14 @@ public partial class BookmarksViewModel : ViewModelBase
     {
         this.bookmarks = bookmarks;
         this.navigation = navigation;
+
+        OpenBookmarkCommand = new RelayCommand<BookmarkModel>(OpenBookmarkAsync);
+        RemoveBookmarkCommand = new RelayCommand<BookmarkModel>(RemoveBookmarkAsync);
     }
+
+    public ICommand OpenBookmarkCommand { get; }
+
+    public ICommand RemoveBookmarkCommand { get; }
 
     public override async Task InitializeAsync()
     {
@@ -48,7 +55,6 @@ public partial class BookmarksViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task OpenBookmarkAsync(BookmarkModel? bookmark)
     {
         if (bookmark is null)
@@ -59,7 +65,6 @@ public partial class BookmarksViewModel : ViewModelBase
         await this.navigation.NavigateToAsync<QuestionDetailViewModel>(detail => detail.QuestionId = bookmark.QuestionId);
     }
 
-    [RelayCommand]
     private async Task RemoveBookmarkAsync(BookmarkModel? bookmark)
     {
         if (bookmark is null)

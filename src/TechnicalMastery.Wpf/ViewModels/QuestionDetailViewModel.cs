@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -11,7 +11,7 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// notes, and study actions (bookmark, complete, needs-review, prev/next).
 /// The id is set before <see cref="InitializeAsync"/> via navigation configure.
 /// </summary>
-public partial class QuestionDetailViewModel : ViewModelBase
+public class QuestionDetailViewModel : ViewModelBase
 {
     private readonly IQuestionApiClient questions;
     private readonly IBookmarkApiClient bookmarks;
@@ -19,13 +19,10 @@ public partial class QuestionDetailViewModel : ViewModelBase
     private readonly INotesApiClient notes;
     private readonly NavigationService navigation;
 
-    [ObservableProperty]
     private int questionId;
 
-    [ObservableProperty]
     private QuestionDetailModel? detail;
 
-    [ObservableProperty]
     private string newNoteText = string.Empty;
 
     public ObservableCollection<QuestionSummaryModel> Related { get; } = new ObservableCollection<QuestionSummaryModel>();
@@ -44,14 +41,59 @@ public partial class QuestionDetailViewModel : ViewModelBase
         this.progress = progress;
         this.notes = notes;
         this.navigation = navigation;
+
+        PreviousCommand = new RelayCommand(PreviousAsync);
+        NextCommand = new RelayCommand(NextAsync);
+        ToggleBookmarkCommand = new RelayCommand(ToggleBookmarkAsync);
+        MarkCompletedCommand = new RelayCommand(MarkCompletedAsync);
+        MarkNeedsReviewCommand = new RelayCommand(MarkNeedsReviewAsync);
+        OpenRelatedCommand = new RelayCommand<QuestionSummaryModel>(OpenRelatedAsync);
+        AddNoteCommand = new RelayCommand(AddNoteAsync);
+        DeleteNoteCommand = new RelayCommand<QuestionNoteModel>(DeleteNoteAsync);
+        BackToBrowseCommand = new RelayCommand(BackToBrowseAsync);
     }
+
+    public int QuestionId
+    {
+        get { return this.questionId; }
+        set { SetProperty(ref this.questionId, value); }
+    }
+
+    public QuestionDetailModel? Detail
+    {
+        get { return this.detail; }
+        set { SetProperty(ref this.detail, value); }
+    }
+
+    public string NewNoteText
+    {
+        get { return this.newNoteText; }
+        set { SetProperty(ref this.newNoteText, value); }
+    }
+
+    public ICommand PreviousCommand { get; }
+
+    public ICommand NextCommand { get; }
+
+    public ICommand ToggleBookmarkCommand { get; }
+
+    public ICommand MarkCompletedCommand { get; }
+
+    public ICommand MarkNeedsReviewCommand { get; }
+
+    public ICommand OpenRelatedCommand { get; }
+
+    public ICommand AddNoteCommand { get; }
+
+    public ICommand DeleteNoteCommand { get; }
+
+    public ICommand BackToBrowseCommand { get; }
 
     public override async Task InitializeAsync()
     {
         await LoadAsync(QuestionId);
     }
 
-    [RelayCommand]
     private async Task PreviousAsync()
     {
         if (QuestionId > 1)
@@ -60,13 +102,11 @@ public partial class QuestionDetailViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task NextAsync()
     {
         await LoadAsync(QuestionId + 1);
     }
 
-    [RelayCommand]
     private async Task ToggleBookmarkAsync()
     {
         if (Detail is null)
@@ -93,19 +133,16 @@ public partial class QuestionDetailViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task MarkCompletedAsync()
     {
         await SetStatusAsync(StudyStatus.Completed);
     }
 
-    [RelayCommand]
     private async Task MarkNeedsReviewAsync()
     {
         await SetStatusAsync(StudyStatus.NeedsReview);
     }
 
-    [RelayCommand]
     private async Task OpenRelatedAsync(QuestionSummaryModel? related)
     {
         if (related is null)
@@ -116,7 +153,6 @@ public partial class QuestionDetailViewModel : ViewModelBase
         await LoadAsync(related.Id);
     }
 
-    [RelayCommand]
     private async Task AddNoteAsync()
     {
         if (Detail is null || string.IsNullOrWhiteSpace(NewNoteText))
@@ -136,7 +172,6 @@ public partial class QuestionDetailViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task DeleteNoteAsync(QuestionNoteModel? note)
     {
         if (note is null || Detail is null)
@@ -155,7 +190,6 @@ public partial class QuestionDetailViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task BackToBrowseAsync()
     {
         await this.navigation.NavigateToAsync<BrowseViewModel>();

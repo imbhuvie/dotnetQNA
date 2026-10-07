@@ -471,6 +471,33 @@ All 10 rules (§38) verified, not just asserted:
 - **All 28 phases complete.** Intentionally remaining: question batches 04+ to 1000+
   via `docs/question-authoring-guide.md` (infra proven, no code changes needed).
 
+## Post-build hardening
+
+### About-crash fix ✅ (2026-10-07)
+
+- Root cause (from the real dialog: TwoWay binding on read-only `AppVersion`):
+  `Run.Text` bindings default to TwoWay, which requires a settable source.
+  AboutViewModel's display properties are get-only → `InvalidOperationException`
+  on render. Other screens survived only because their models have setters.
+- All 21 `Run` bindings across 7 views now declare `Mode=OneWay` (correct order:
+  `{Binding Path, Mode=OneWay}` — path first).
+- `App.xaml.cs`: WPF global exception handling (`DispatcherUnhandledException`
+  → friendly message + `logs/wpf-*.txt` full-stack log, app survives;
+  domain/unobserved-task faults logged). Also removed duplicate VM registrations.
+  Next UI fault arrives with evidence instead of killing the process (§20).
+
+### Simple-MVVM conversion ✅ (2026-10-07)
+
+- Dropped `CommunityToolkit.Mvvm` (no generators, no `partial`, no attributes):
+  new `Commands/RelayCommand.cs` (sync/async, optional CanExecute) +
+  `Commands/RelayCommandOfT.cs` (parameterized), and hand-written
+  `ViewModelBase : INotifyPropertyChanged` with `SetProperty` helper.
+- Converted all 8 VMs + `NavigationService` + `ThemeService` with **identical
+  public names** (`SearchText`, `SearchCommand`, `CurrentViewModel`, `IsDark`,
+  …) — zero XAML changes; flow and architecture untouched.
+- Verified: full-solution `dotnet build` — 0 errors; zero `CommunityToolkit`
+  references in code; app launches alive with API serving.
+
 ## Question batches (ongoing)
 
 ### Batch 04a — Collections part 1 ✅ (40 total)

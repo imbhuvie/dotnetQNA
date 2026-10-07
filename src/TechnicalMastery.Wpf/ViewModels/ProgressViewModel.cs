@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -10,12 +10,11 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// Progress screen (§16): list all study progress entries with status badges,
 /// filter by status, and navigate to question detail.
 /// </summary>
-public partial class ProgressViewModel : ViewModelBase
+public class ProgressViewModel : ViewModelBase
 {
     private readonly IProgressApiClient progress;
     private readonly NavigationService navigation;
 
-    [ObservableProperty]
     private StudyStatus? filterStatus;
 
     public ObservableCollection<StudyProgressModel> Entries { get; } = new ObservableCollection<StudyProgressModel>();
@@ -33,14 +32,26 @@ public partial class ProgressViewModel : ViewModelBase
     {
         this.progress = progress;
         this.navigation = navigation;
+
+        FilterChangedCommand = new RelayCommand(FilterChangedAsync);
+        OpenQuestionCommand = new RelayCommand<StudyProgressModel>(OpenQuestionAsync);
     }
+
+    public StudyStatus? FilterStatus
+    {
+        get { return this.filterStatus; }
+        set { SetProperty(ref this.filterStatus, value); }
+    }
+
+    public ICommand FilterChangedCommand { get; }
+
+    public ICommand OpenQuestionCommand { get; }
 
     public override async Task InitializeAsync()
     {
         await LoadAsync();
     }
 
-    [RelayCommand]
     private async Task FilterChangedAsync()
     {
         await LoadAsync();
@@ -74,7 +85,6 @@ public partial class ProgressViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task OpenQuestionAsync(StudyProgressModel? entry)
     {
         if (entry is null)

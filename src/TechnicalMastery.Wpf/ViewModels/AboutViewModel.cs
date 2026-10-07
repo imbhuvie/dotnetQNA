@@ -1,5 +1,4 @@
 using System.Reflection;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TechnicalMastery.Wpf.ViewModels;
 

@@ -1,5 +1,6 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TechnicalMastery.Wpf.Services;
 
@@ -8,10 +9,24 @@ namespace TechnicalMastery.Wpf.Services;
 /// Views reference theme colors via {DynamicResource …Brush} so they
 /// update instantly with no code-behind (§26, §32).
 /// </summary>
-public partial class ThemeService : ObservableObject
+public class ThemeService : INotifyPropertyChanged
 {
-    [ObservableProperty]
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     private bool isDark;
+
+    public bool IsDark
+    {
+        get { return this.isDark; }
+        private set
+        {
+            if (this.isDark != value)
+            {
+                this.isDark = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDark)));
+            }
+        }
+    }
 
     public void ApplyTheme(bool dark)
     {

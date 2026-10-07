@@ -52,7 +52,7 @@ Backend knows only HTTP / JSON / DTOs / business rules / database — never that
 | Mapping | Manual DTO mapping (no AutoMapper — mappings are trivial) |
 | Logging | Serilog (no passwords/tokens/secrets/connection strings in logs) |
 | API docs | Swagger/OpenAPI, every endpoint documented for future mobile devs |
-| WPF | MVVM via **CommunityToolkit.Mvvm**, `IHttpClientFactory` typed clients, no logic in code-behind |
+| WPF | Hand-written MVVM (`INotifyPropertyChanged` + own `RelayCommand`), `IHttpClientFactory` typed clients, no logic in code-behind |
 | Tests | xUnit (+ Moq, FluentAssertions, `Microsoft.AspNetCore.Mvc.Testing`) |
 | DB strategy | EF Core migrations (never `EnsureCreated()` as the production path) |
 

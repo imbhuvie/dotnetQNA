@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -10,24 +10,19 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// Dashboard screen (§11): headline totals + per-category progress + resume entry.
 /// Loads its data in <see cref="InitializeAsync"/> after navigation.
 /// </summary>
-public partial class DashboardViewModel : ViewModelBase
+public class DashboardViewModel : ViewModelBase
 {
     private readonly IDashboardApiClient dashboard;
     private readonly NavigationService navigation;
 
-    [ObservableProperty]
     private int totalQuestions;
 
-    [ObservableProperty]
     private int completedCount;
 
-    [ObservableProperty]
     private int remainingCount;
 
-    [ObservableProperty]
     private int bookmarkCount;
 
-    [ObservableProperty]
     private int needsReviewCount;
 
     public ObservableCollection<CategoryProgressModel> Categories { get; } = new ObservableCollection<CategoryProgressModel>();
@@ -36,7 +31,41 @@ public partial class DashboardViewModel : ViewModelBase
     {
         this.dashboard = dashboard;
         this.navigation = navigation;
+
+        ContinueLearningCommand = new RelayCommand(ContinueLearningAsync);
     }
+
+    public int TotalQuestions
+    {
+        get { return this.totalQuestions; }
+        set { SetProperty(ref this.totalQuestions, value); }
+    }
+
+    public int CompletedCount
+    {
+        get { return this.completedCount; }
+        set { SetProperty(ref this.completedCount, value); }
+    }
+
+    public int RemainingCount
+    {
+        get { return this.remainingCount; }
+        set { SetProperty(ref this.remainingCount, value); }
+    }
+
+    public int BookmarkCount
+    {
+        get { return this.bookmarkCount; }
+        set { SetProperty(ref this.bookmarkCount, value); }
+    }
+
+    public int NeedsReviewCount
+    {
+        get { return this.needsReviewCount; }
+        set { SetProperty(ref this.needsReviewCount, value); }
+    }
+
+    public ICommand ContinueLearningCommand { get; }
 
     public override async Task InitializeAsync()
     {
@@ -70,7 +99,6 @@ public partial class DashboardViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task ContinueLearningAsync()
     {
         await this.navigation.NavigateToAsync<BrowseViewModel>();

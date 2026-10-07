@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -11,15 +11,13 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// with inline edit, delete, and jump-to-question. New notes are created from
 /// the question reader, where the question context already exists.
 /// </summary>
-public partial class NotesViewModel : ViewModelBase
+public class NotesViewModel : ViewModelBase
 {
     private readonly INotesApiClient notes;
     private readonly NavigationService navigation;
 
-    [ObservableProperty]
     private string editText = string.Empty;
 
-    [ObservableProperty]
     private QuestionNoteModel? editingNote;
 
     public ObservableCollection<QuestionNoteModel> Notes { get; } = new ObservableCollection<QuestionNoteModel>();
@@ -28,14 +26,41 @@ public partial class NotesViewModel : ViewModelBase
     {
         this.notes = notes;
         this.navigation = navigation;
+
+        StartEditCommand = new RelayCommand<QuestionNoteModel>(StartEdit);
+        SaveEditCommand = new RelayCommand(SaveEditAsync);
+        CancelEditCommand = new RelayCommand(CancelEdit);
+        DeleteNoteCommand = new RelayCommand<QuestionNoteModel>(DeleteNoteAsync);
+        OpenQuestionCommand = new RelayCommand<QuestionNoteModel>(OpenQuestionAsync);
     }
+
+    public string EditText
+    {
+        get { return this.editText; }
+        set { SetProperty(ref this.editText, value); }
+    }
+
+    public QuestionNoteModel? EditingNote
+    {
+        get { return this.editingNote; }
+        set { SetProperty(ref this.editingNote, value); }
+    }
+
+    public ICommand StartEditCommand { get; }
+
+    public ICommand SaveEditCommand { get; }
+
+    public ICommand CancelEditCommand { get; }
+
+    public ICommand DeleteNoteCommand { get; }
+
+    public ICommand OpenQuestionCommand { get; }
 
     public override async Task InitializeAsync()
     {
         await LoadAsync();
     }
 
-    [RelayCommand]
     private void StartEdit(QuestionNoteModel? note)
     {
         if (note is null)
@@ -47,7 +72,6 @@ public partial class NotesViewModel : ViewModelBase
         EditText = note.NoteText;
     }
 
-    [RelayCommand]
     private async Task SaveEditAsync()
     {
         if (EditingNote is null || string.IsNullOrWhiteSpace(EditText))
@@ -68,14 +92,12 @@ public partial class NotesViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private void CancelEdit()
     {
         EditingNote = null;
         EditText = string.Empty;
     }
 
-    [RelayCommand]
     private async Task DeleteNoteAsync(QuestionNoteModel? note)
     {
         if (note is null)
@@ -94,7 +116,6 @@ public partial class NotesViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task OpenQuestionAsync(QuestionNoteModel? note)
     {
         if (note is null)

@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using TechnicalMastery.Wpf.Commands;
 using TechnicalMastery.Wpf.Models;
 using TechnicalMastery.Wpf.Services;
 
@@ -9,9 +9,9 @@ namespace TechnicalMastery.Wpf.ViewModels;
 /// <summary>
 /// Browse screen (§12): category → topic → question list with difficulty filter,
 /// search text and server-side pagination. Opening a question navigates to the
-/// detail screen (Phase 21) with the selected id.
+/// detail screen with the selected id.
 /// </summary>
-public partial class BrowseViewModel : ViewModelBase
+public class BrowseViewModel : ViewModelBase
 {
     private const int PageSize = 20;
 
@@ -19,26 +19,21 @@ public partial class BrowseViewModel : ViewModelBase
     private readonly IQuestionApiClient questions;
     private readonly NavigationService navigation;
 
-    [ObservableProperty]
     private string searchText = string.Empty;
 
-    [ObservableProperty]
     private CategoryModel? selectedCategory;
 
-    [ObservableProperty]
     private TopicModel? selectedTopic;
 
-    [ObservableProperty]
     private DifficultyLevel? selectedDifficulty;
 
-    [ObservableProperty]
     private int page = 1;
 
-    [ObservableProperty]
     private int totalPages;
 
-    [ObservableProperty]
     private int totalCount;
+
+    private string selectedSort = "Default";
 
     public ObservableCollection<CategoryModel> Categories { get; } = new ObservableCollection<CategoryModel>();
 
@@ -69,15 +64,79 @@ public partial class BrowseViewModel : ViewModelBase
         "Easiest first"
     };
 
-    [ObservableProperty]
-    private string selectedSort = "Default";
-
     public BrowseViewModel(ICatalogApiClient catalog, IQuestionApiClient questions, NavigationService navigation)
     {
         this.catalog = catalog;
         this.questions = questions;
         this.navigation = navigation;
+
+        CategoryChangedCommand = new RelayCommand(CategoryChangedAsync);
+        FilterChangedCommand = new RelayCommand(FilterChangedAsync);
+        SearchCommand = new RelayCommand(SearchAsync);
+        PreviousPageCommand = new RelayCommand(PreviousPageAsync);
+        NextPageCommand = new RelayCommand(NextPageAsync);
+        OpenQuestionCommand = new RelayCommand<QuestionSummaryModel>(OpenQuestionAsync);
     }
+
+    public string SearchText
+    {
+        get { return this.searchText; }
+        set { SetProperty(ref this.searchText, value); }
+    }
+
+    public CategoryModel? SelectedCategory
+    {
+        get { return this.selectedCategory; }
+        set { SetProperty(ref this.selectedCategory, value); }
+    }
+
+    public TopicModel? SelectedTopic
+    {
+        get { return this.selectedTopic; }
+        set { SetProperty(ref this.selectedTopic, value); }
+    }
+
+    public DifficultyLevel? SelectedDifficulty
+    {
+        get { return this.selectedDifficulty; }
+        set { SetProperty(ref this.selectedDifficulty, value); }
+    }
+
+    public int Page
+    {
+        get { return this.page; }
+        set { SetProperty(ref this.page, value); }
+    }
+
+    public int TotalPages
+    {
+        get { return this.totalPages; }
+        set { SetProperty(ref this.totalPages, value); }
+    }
+
+    public int TotalCount
+    {
+        get { return this.totalCount; }
+        set { SetProperty(ref this.totalCount, value); }
+    }
+
+    public string SelectedSort
+    {
+        get { return this.selectedSort; }
+        set { SetProperty(ref this.selectedSort, value); }
+    }
+
+    public ICommand CategoryChangedCommand { get; }
+
+    public ICommand FilterChangedCommand { get; }
+
+    public ICommand SearchCommand { get; }
+
+    public ICommand PreviousPageCommand { get; }
+
+    public ICommand NextPageCommand { get; }
+
+    public ICommand OpenQuestionCommand { get; }
 
     public override async Task InitializeAsync()
     {
@@ -85,26 +144,22 @@ public partial class BrowseViewModel : ViewModelBase
         await LoadQuestionsAsync(1);
     }
 
-    [RelayCommand]
     private async Task CategoryChangedAsync()
     {
         await LoadTopicsAsync();
         await LoadQuestionsAsync(1);
     }
 
-    [RelayCommand]
     private async Task FilterChangedAsync()
     {
         await LoadQuestionsAsync(1);
     }
 
-    [RelayCommand]
     private async Task SearchAsync()
     {
         await LoadQuestionsAsync(1);
     }
 
-    [RelayCommand]
     private async Task PreviousPageAsync()
     {
         if (Page > 1)
@@ -113,7 +168,6 @@ public partial class BrowseViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task NextPageAsync()
     {
         if (Page < TotalPages)
@@ -122,7 +176,6 @@ public partial class BrowseViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private async Task OpenQuestionAsync(QuestionSummaryModel? question)
     {
         if (question is null)
@@ -158,7 +211,8 @@ public partial class BrowseViewModel : ViewModelBase
         return (null, false);
     }
 
-    private async Task LoadCatalogAsync()    {
+    private async Task LoadCatalogAsync()
+    {
         try
         {
             IReadOnlyList<CategoryModel> categories = await this.catalog.GetCategoriesAsync(CancellationToken.None);
