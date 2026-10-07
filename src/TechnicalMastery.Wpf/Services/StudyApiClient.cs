@@ -122,6 +122,12 @@ public class StudyApiClient :
         return await GetAsync<List<StudyProgressModel>>("api/progress", ct) ?? new List<StudyProgressModel>();
     }
 
+    public async Task<IReadOnlyList<QuestionNoteModel>> GetAllNotesAsync(CancellationToken ct)
+    {
+        return await GetAsync<List<QuestionNoteModel>>("api/notes", ct)
+            ?? new List<QuestionNoteModel>();
+    }
+
     public async Task<IReadOnlyList<QuestionNoteModel>> GetByQuestionAsync(int questionId, CancellationToken ct)
     {
         return await GetAsync<List<QuestionNoteModel>>("api/notes/question/" + questionId, ct)

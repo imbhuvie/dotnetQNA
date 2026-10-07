@@ -46,6 +46,8 @@ public interface IProgressApiClient
 
 public interface INotesApiClient
 {
+    Task<IReadOnlyList<QuestionNoteModel>> GetAllNotesAsync(CancellationToken ct);
+
     Task<IReadOnlyList<QuestionNoteModel>> GetByQuestionAsync(int questionId, CancellationToken ct);
 
     Task CreateAsync(int questionId, string noteText, CancellationToken ct);

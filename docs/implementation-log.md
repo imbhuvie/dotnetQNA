@@ -409,3 +409,16 @@
   colored brush: gray/blue/green/orange); registered app-wide.
 - API interface updated: `IProgressApiClient.GetAllProgressAsync` + `StudyApiClient` impl.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings; app launches.
+
+## Phase 25 — Notes Screen ✅ (2026-10-07)
+
+- New `GET /api/notes` through proper layers (repo `GetAllAsync` newest-first →
+  service → controller) — one call for the overview screen instead of the N+1
+  per-question loop the draft VM used (which would fire ~1000 requests at scale).
+- `NotesViewModel`: single-load list with inline edit (one shared edit panel),
+  delete, and jump-to-question. Creation stays in the question reader, where the
+  question context exists. `INotesApiClient.GetAllNotesAsync` + client impl.
+- `NotesView`: note cards (Question #, text, updated date, Open/Edit/Delete) +
+  shared edit panel + empty state.
+- Live check: created note via API, `GET /api/notes` returns it; app launches alive.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.

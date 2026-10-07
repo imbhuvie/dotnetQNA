@@ -17,6 +17,16 @@ public class NoteRepository : INoteRepository
         this.context = context;
     }
 
+    public async Task<IReadOnlyList<QuestionNote>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        List<QuestionNote> notes = await this.context.QuestionNotes
+            .AsNoTracking()
+            .OrderByDescending(note => note.UpdatedAt)
+            .ToListAsync(cancellationToken);
+
+        return notes;
+    }
+
     public async Task<IReadOnlyList<QuestionNote>> GetByQuestionIdAsync(int questionId, CancellationToken cancellationToken)
     {
         List<QuestionNote> notes = await this.context.QuestionNotes

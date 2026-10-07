@@ -8,6 +8,8 @@ namespace TechnicalMastery.Application.Interfaces;
 /// </summary>
 public interface INoteService
 {
+    Task<IReadOnlyList<QuestionNoteDto>> GetAllAsync(CancellationToken cancellationToken);
+
     Task<IReadOnlyList<QuestionNoteDto>> GetByQuestionAsync(int questionId, CancellationToken cancellationToken);
 
     Task<QuestionNoteDto> GetByIdAsync(int id, CancellationToken cancellationToken);

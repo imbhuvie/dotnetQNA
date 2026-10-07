@@ -19,6 +19,16 @@ public class NotesController : ControllerBase
         this.notes = notes;
     }
 
+    /// <summary>Gets all notes across questions, newest first.</summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<QuestionNoteDto>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<QuestionNoteDto>>>> GetAll(CancellationToken cancellationToken)
+    {
+        IReadOnlyList<QuestionNoteDto> result = await this.notes.GetAllAsync(cancellationToken);
+
+        return Ok(ApiResponse<IReadOnlyList<QuestionNoteDto>>.Ok(result, "Notes retrieved successfully."));
+    }
+
     /// <summary>Gets all notes for one question.</summary>
     [HttpGet("question/{questionId:int}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<QuestionNoteDto>>), StatusCodes.Status200OK)]

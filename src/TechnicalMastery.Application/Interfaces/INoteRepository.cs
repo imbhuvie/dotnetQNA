@@ -7,6 +7,8 @@ namespace TechnicalMastery.Application.Interfaces;
 /// </summary>
 public interface INoteRepository
 {
+    Task<IReadOnlyList<QuestionNote>> GetAllAsync(CancellationToken cancellationToken);
+
     Task<IReadOnlyList<QuestionNote>> GetByQuestionIdAsync(int questionId, CancellationToken cancellationToken);
 
     Task<QuestionNote?> GetByIdAsync(int id, CancellationToken cancellationToken);

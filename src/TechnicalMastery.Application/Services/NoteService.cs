@@ -29,6 +29,13 @@ public class NoteService : INoteService
         this.updateValidator = updateValidator;
     }
 
+    public async Task<IReadOnlyList<QuestionNoteDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        IReadOnlyList<QuestionNote> result = await this.notes.GetAllAsync(cancellationToken);
+
+        return result.Select(DtoMapper.ToDto).ToList();
+    }
+
     public async Task<IReadOnlyList<QuestionNoteDto>> GetByQuestionAsync(int questionId, CancellationToken cancellationToken)
     {
         await EnsureQuestionExistsAsync(questionId, cancellationToken);
