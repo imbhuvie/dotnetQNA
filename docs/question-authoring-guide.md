@@ -89,7 +89,10 @@ commits so history stays reviewable. Never commit `*.db` (gitignored).
 | 01 | `01-csharp-fundamentals.json` | C# Fundamentals | 10 | ✅ Done |
 | 02 | `02-csharp-advanced.json` | C# Advanced | 10 | ✅ Done |
 | 03 | `03-oop.json` | OOP | 10 | ✅ Done |
-| 04 | `04-collections.json` | Collections | 40 | ⬜ |
+| 04a | `04-collections-1.json` | Collections (lists, dictionaries) | 10 | ✅ Done |
+| 04b | `04-collections-2.json` | Collections (queues, concurrent) | 10 | ⬜ |
+| 04c | `04-collections-3.json` | Collections (enumerables, spans) | 10 | ⬜ |
+| 04d | `04-collections-4.json` | Collections (production scenarios) | 10 | ⬜ |
 | 05 | `05-linq.json` | LINQ | 50 | ⬜ |
 | 06 | `06-dotnet.json` | .NET | 40 | ⬜ |
 | 07 | `07-dependency-injection.json` | Dependency Injection | 40 | ⬜ |

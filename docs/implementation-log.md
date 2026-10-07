@@ -470,3 +470,14 @@ All 10 rules (§38) verified, not just asserted:
 - README progress table updated to final state.
 - **All 28 phases complete.** Intentionally remaining: question batches 04+ to 1000+
   via `docs/question-authoring-guide.md` (infra proven, no code changes needed).
+
+## Question batches (ongoing)
+
+### Batch 04a — Collections part 1 ✅ (40 total)
+
+- `questions/04-collections-1.json` (10: array vs List, Add/Insert/RemoveAt costs,
+  collection expressions, Dictionary keys, HashSet set-ops, IEqualityComparer vs
+  IEquatable, collection-modified errors, jagged/multidim/flat grids, ToLookup/GroupBy,
+  API surface types). Tracker split into 04a–04d part rows (same 40 total).
+- Live verification: 40 total, 10 in Collections, detail + tags correct.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
