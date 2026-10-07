@@ -593,3 +593,11 @@ All 10 rules (§38) verified, not just asserted:
   log volume/cost, DI testing, OpenTelemetry, hosted-service lifetimes).
 - Live verification: 140 total, 20 in .NET.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 06c — .NET part 3 ✅ (150 total)
+
+- `questions/06-dotnet-3.json` (10: Generic Host, IHostedService vs BackgroundService,
+  graceful shutdown, health checks, PeriodicTimer, Quartz/Hangfire, scoped services
+  in workers, K8s probes YAML, Windows/systemd hosting, zero-downtime deploys).
+- Live verification: 150 total, 30 in .NET.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
