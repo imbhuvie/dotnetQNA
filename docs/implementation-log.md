@@ -451,3 +451,22 @@
   when the context already tracks that key. Fixed by building the DTO from the loaded
   question (no graph attach, robust under any context lifetime).
 - Verified: `dotnet test` 24/24 passed; full-solution build 0 errors, 0 warnings.
+
+## Phase 28 — Final Architecture Review ✅ (2026-10-07)
+
+All 10 rules (§38) verified, not just asserted:
+- R1/R2: zero `EntityFramework`/`Sqlite`/`DbContext` matches in `TechnicalMastery.Wpf`.
+- R3: view models orchestrate API-client interfaces only (no queries, no rules).
+- R4: zero `System.Windows`/Wpf matches in `TechnicalMastery.Api`.
+- R5: zero EF/ASP.NET matches in `TechnicalMastery.Domain`.
+- R6/R7/R8: controllers delegate to `I*Service`, services hold rules, EF lives in
+  Infrastructure (by construction, reviewed per phase).
+- R9: controllers return DTOs; WPF ships its own contract copies — entities never
+  cross HTTP in either direction.
+- R10: `TechnicalMastery.Wpf` has **zero** `ProjectReference`s; Api references only
+  Application + Infrastructure. The frontend is replaceable by construction.
+- Hygiene: no `EnsureCreated()` in code (docs prose only); `dotnet ef migrations
+  has-pending-model-changes` → none; build 0/0; `dotnet test` 24/24.
+- README progress table updated to final state.
+- **All 28 phases complete.** Intentionally remaining: question batches 04+ to 1000+
+  via `docs/question-authoring-guide.md` (infra proven, no code changes needed).

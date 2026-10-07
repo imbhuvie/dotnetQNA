@@ -67,10 +67,10 @@ API base URL (no hardcoded endpoints).
 |---|---|---|
 | M1 Solution + Domain | 1–2 | ✅ Done |
 | M2 Data layer (DbContext, SQLite, migrations, repositories) | 3–6 | ✅ Done (seeding in M4) |
-| M3 Backend vertical (services → controllers → Serilog/Swagger) | 7–13 | ⬜ Next |
-| M4 Content seeding (1000+ questions) + API smoke tests | 14–15 | ⬜ |
-| M5 WPF client | 16–25 | ⬜ |
-| M6 Polish + tests + architecture review | 26–28 | ⬜ |
+| M3 Backend vertical (services → controllers → Serilog/Swagger) | 7–13 | ✅ Done |
+| M4 Content seeding (30/1000+ so far — see `docs/question-authoring-guide.md` tracker) + API tests 40/40 | 14–15 | ✅ Infra done, batches ongoing |
+| M5 WPF client (dashboard, browse, reader, search, bookmarks, progress, notes) | 16–25 | ✅ Done |
+| M6 Polish + themes, 24 xUnit tests green, final architecture review | 26–28 | ✅ Done |
 
 ## Contributing / conventions
 
