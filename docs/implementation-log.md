@@ -558,3 +558,11 @@ All 10 rules (§38) verified, not just asserted:
   AOT vs ReadyToRun, secrets management). Tracker .NET row split into 06a–06d.
 - Live verification: 130 total, 10 in .NET.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+### Batch 06b — .NET part 2 ✅ (140 total)
+
+- `questions/06-dotnet-2.json` (10: lifetime semantics, captive dependencies,
+  keyed services, TryAdd/Replace testing, scopes + correlation, Serilog sinks,
+  log volume/cost, DI testing, OpenTelemetry, hosted-service lifetimes).
+- Live verification: 140 total, 20 in .NET.
+- Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
