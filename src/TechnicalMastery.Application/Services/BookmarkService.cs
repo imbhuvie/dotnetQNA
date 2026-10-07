@@ -51,9 +51,16 @@ public class BookmarkService : IBookmarkService
 
         await this.bookmarks.AddAsync(bookmark, cancellationToken);
 
-        bookmark.Question = question;
-
-        return DtoMapper.ToDto(bookmark);
+        // Build the DTO from the already-loaded question instead of assigning
+        // the navigation: attaching a detached graph would conflict with any
+        // instance the context already tracks (same key, different object).
+        return new BookmarkDto
+        {
+            Id = bookmark.Id,
+            QuestionId = questionId,
+            QuestionText = question.QuestionText,
+            CreatedAt = bookmark.CreatedAt
+        };
     }
 
     public async Task RemoveAsync(int questionId, CancellationToken cancellationToken)

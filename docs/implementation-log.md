@@ -435,3 +435,19 @@
 - Build validates both dictionaries (XAML compiler resolves all brush keys).
 - Live check: app launches alive on the default light theme with API serving.
 - Verified: full-solution `dotnet build` — 0 errors, 0 warnings.
+
+## Phase 27 — Automated Tests ✅ (2026-10-07)
+
+- `tests/`: `TestDatabase` helper (temp-file SQLite + real migrations + 3-question
+  seed, fresh per test, file deleted on dispose — dev DB never touched) and 5 classes,
+  **24 tests, all green** (`dotnet test`): `QuestionServiceTests` (detail, filters,
+  search-by-tag, NotFound/validation guards, random, related), `BookmarkServiceTests`
+  (add/list/duplicate-conflict/missing/remove), `StudyProgressServiceTests`
+  (complete stamps, review-count increments, learning creation, status validation),
+  `QuestionRepositoryTests` (pagination, category stats, counts), `QuestionControllerTests`
+  (envelope + status codes, NotFound propagation).
+- Real bug found by the suite: `BookmarkService.AddAsync` assigned a detached `Question`
+  to the new bookmark's navigation — harmless on fresh production scopes but throws
+  when the context already tracks that key. Fixed by building the DTO from the loaded
+  question (no graph attach, robust under any context lifetime).
+- Verified: `dotnet test` 24/24 passed; full-solution build 0 errors, 0 warnings.
